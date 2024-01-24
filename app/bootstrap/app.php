@@ -8,6 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
+use Symfony\Component\Config\FileLocator;
 use D6\Invoice\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
@@ -19,6 +20,7 @@ use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\EventListener\ErrorListener;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\EventListener\ResponseListener;
 use D6\Invoice\Component\HttpKernel\EventListener\StringResponseListener;
 
@@ -83,5 +85,22 @@ $container->register('kernel', Kernel::class)
         new Reference('argument_resolver'),
     ])
     ->setPublic(true);
+
+/**
+ * Load the rest of the pre-existing configuration files
+ */
+$loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../config'));
+$loader->load('app.php');
+$loader->load('console.php');
+$loader->load('monolog.php');
+$loader->load('database.php');
+$loader->load('views.php');
+
+/**
+ * Compile the container, if not compiled
+ */
+if (!$container->isCompiled()) {
+    $container->compile();
+}
 
 return $container;

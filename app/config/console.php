@@ -10,6 +10,7 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use Doctrine\DBAL\Connection;
 use D6\Invoice\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use D6\Invoice\App\Console\Command\ListUsersCommand;
@@ -18,6 +19,7 @@ return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
     $services->set(ListUsersCommand::class)
+        ->arg('$connection', service(Connection::class))
         ->tag('console.command')
         ->public();
 

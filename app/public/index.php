@@ -8,63 +8,22 @@
  * with this source code in the file LICENSE.
  */
 
-use Symfony\Component\ErrorHandler\Debug;
-use Symfony\Component\HttpKernel\HttpKernel;
-use Symfony\Component\HttpFoundation\Request;
-
 require_once __DIR__.'/../vendor/autoload.php';
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
- * Only enable DEBUG if we within the specified environments below
+ * Turn on the lights if in local and/or testing environments
  */
-if (in_array(getenv('APP_ENV'), ['local', 'test']) && getenv('APP_DEBUG') === true) {
-    Debug::enable();
+if (in_array(getenv('APP_ENV'), ['test', 'local'])) {
+    ini_set('display_errors', 1);
+    error_reporting(-1);
 }
 
-/*
-|--------------------------------------------------------------------------
-| Run The Application
-|--------------------------------------------------------------------------
-|
-| Once we have the application, we can handle the incoming request using
-| the application's HTTP kernel. Then, we will send the response back
-| to this client's browser, allowing them to enjoy our application.
-|
-*/
-require_once __DIR__.'/../bootstrap/app.php';
+$container = include __DIR__.'/../bootstrap/app.php';
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These routes
-| are handled by Symfony Routing component.
-|
-| Let us to make something great!
-|
-*/
-require_once __DIR__.'/../routes/web.php';
-
-/*
-|--------------------------------------------------------------------------
-| Run The Application
-|--------------------------------------------------------------------------
-|
-| Once we have the application, we can handle the incoming request using
-| the application's HTTP kernel. Then, we will send the response back
-| to this client's browser, allowing them to enjoy our application.
-|
-*/
 $request = Request::createFromGlobals();
 
-try {
-    $kernel = $container->get(HttpKernel::class);
+$response = $container->get('kernel')->handle($request);
 
-    $response = $kernel->handle($request);
-
-    $response->send();
-
-    $kernel->terminate($request, $response);
-} catch (Exception $exc) {
-}
+$response->send();

@@ -15,6 +15,11 @@ use DateInterval;
 use PHPUnit\Framework\TestCase;
 use D6\Invoice\Component\Twig\Extension\AppExtension;
 
+/**
+ * Class AppExtensionTest
+ *
+ * @see https://www.sitepoint.com/building-custom-twig-filter-tdd-way/
+ */
 class AppExtensionTest extends TestCase
 {
     /**

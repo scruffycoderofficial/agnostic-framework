@@ -13,8 +13,14 @@ namespace spec\D6\Invoice\Component\Console;
 use PhpSpec\ObjectBehavior;
 use D6\Invoice\Component\Console\Application;
 
+/**
+ * Class ApplicationSpec
+ */
 class ApplicationSpec extends ObjectBehavior
 {
+    /**
+     * Constructor arguments
+     */
     public function let()
     {
         $this->beConstructedWith([]);

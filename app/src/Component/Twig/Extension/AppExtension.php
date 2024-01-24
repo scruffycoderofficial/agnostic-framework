@@ -10,23 +10,37 @@
 
 namespace D6\Invoice\Component\Twig\Extension;
 
+use Twig\TwigFilter;
+
 /**
  * Class AppExtension
+ *
+ * @see https://www.sitepoint.com/building-custom-twig-filter-tdd-way/
  */
 class AppExtension
 {
+    /**
+     * @return TwigFilter[]
+     */
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('tss', [$this, 'tssFilter']),
+            new TwigFilter('tss', [$this, 'tssFilter']),
         ];
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return 'app_extension';
     }
 
+    /**
+     * @param \DateTime $timestamp
+     * @return string
+     */
     public function tssFilter(\DateTime $timestamp)
     {
         $TSS = ['Just now', 'Minutes ago', 'Within an hour', 'A few hours ago', 'Within one day', 'Some time back', 'Ages ago', 'From Mars'];

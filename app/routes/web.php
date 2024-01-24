@@ -8,19 +8,13 @@
  * with this source code in the file LICENSE.
  */
 
-use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing;
 
-$routes = $container->get(RouteCollection::class);
+$routes = new Routing\RouteCollection();
 
-$routes->add('hello', new Route('/hello/{name}', [
-        '_controller' => function (Request $request): Response {
-            return new Response(
-                sprintf("Hello %s", $request->get('name'))
-            );
-        }]
-));
-
-$routes->add('reports', new Route('/reports', [
-    '_controller' => ['\D6\Invoice\App\Controller\ReportsController::listAction'],
+$routes->add('leap_year', new Routing\Route('/is_leap_year/{year}', [
+    'year' => null,
+    '_controller' => [D6\Invoice\App\Controller\LeapYearsController::class, 'index'],
 ]));
+
+return $routes;

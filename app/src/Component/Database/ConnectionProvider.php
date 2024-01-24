@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace D6\Invoice\Component\Orm;
+namespace D6\Invoice\Component\Database;
 
 use PDO;
 

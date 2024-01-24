@@ -19,6 +19,11 @@ use function iterator_to_array;
  */
 class Application extends SymfonyApplication
 {
+    /**
+     * Application constructor.
+     *
+     * @param iterable|null $commands
+     */
     public function __construct(iterable $commands = null)
     {
         $commands = $commands instanceof Traversable ? iterator_to_array($commands) : $commands;

@@ -26,8 +26,12 @@ services:
     environment:
       APP_NAME: "d6 Invoicing System"
     working_dir: /var/www
+    links:
+      - mysql
+      - smtp
     volumes:
       - ./app:/var/www
+      - ./app/var/:/var/www/var:rw
       - ./sys/php/default.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       d6-invoice-system:

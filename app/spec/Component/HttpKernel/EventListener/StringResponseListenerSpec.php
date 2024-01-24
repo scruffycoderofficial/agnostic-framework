@@ -8,15 +8,18 @@
  * with this source code in the file LICENSE.
  */
 
-namespace spec\D6\Invoice\Component\Console\Command;
+namespace spec\D6\Invoice\Component\HttpKernel\EventListener;
 
 use PhpSpec\ObjectBehavior;
-use D6\Invoice\Component\Console\Command\ListUsersCommand;
+use D6\Invoice\Component\HttpKernel\EventListener\StringResponseListener;
 
-class ListUsersCommandSpec extends ObjectBehavior
+/**
+ * Class StringResponseListenerSpec
+ */
+class StringResponseListenerSpec extends ObjectBehavior
 {
     public function it_is_initializable()
     {
-        $this->shouldHaveType(ListUsersCommand::class);
+        $this->shouldHaveType(StringResponseListener::class);
     }
 }

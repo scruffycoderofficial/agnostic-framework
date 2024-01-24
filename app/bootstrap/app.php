@@ -97,7 +97,7 @@ $container->register('kernel', Kernel::class)
 /**
  * Load the rest of the pre-existing configuration files
  */
-$loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../config'));
+$loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../config'));
 $loader->load('app.php');
 $loader->load('console.php');
 $loader->load('monolog.php');
@@ -107,7 +107,7 @@ $loader->load('views.php');
 /**
  * Compile the container, if not compiled
  */
-if (!$container->isCompiled()) {
+if (! $container->isCompiled()) {
     $container->compile();
 }
 

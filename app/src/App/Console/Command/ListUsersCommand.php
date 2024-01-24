@@ -54,7 +54,7 @@ class ListUsersCommand extends Command
 
         $results = [];
 
-        array_map(function($entry) use(&$results){
+        array_map(function ($entry) use (&$results) {
             array_push($results, [
                 $entry['id'],
                 $entry['first_name'],
@@ -63,7 +63,7 @@ class ListUsersCommand extends Command
                 $entry['mobile'],
                 $entry['address'],
                 $entry['created_at'],
-                $entry['updated_at']
+                $entry['updated_at'],
             ]);
         }, $resultSet->fetchAllAssociative());
 

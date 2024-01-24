@@ -10,8 +10,8 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DriverManager;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();

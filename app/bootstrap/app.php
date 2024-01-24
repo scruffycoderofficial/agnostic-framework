@@ -19,9 +19,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\EventListener\ErrorListener;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
-use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\EventListener\ResponseListener;
+use Symfony\Component\HttpKernel\Controller\ContainerControllerResolver;
 use D6\Invoice\Component\HttpKernel\EventListener\StringResponseListener;
 
 $container = new ContainerBuilder();
@@ -42,7 +42,8 @@ $container->register('matcher', UrlMatcher::class)
 
 $container->register('request_stack', RequestStack::class);
 
-$container->register('controller_resolver', ControllerResolver::class);
+$container->register('controller_resolver', ContainerControllerResolver::class)
+    ->setArguments([$container]);
 
 $container->register('argument_resolver', ArgumentResolver::class);
 

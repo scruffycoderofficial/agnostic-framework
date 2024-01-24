@@ -10,7 +10,13 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Connection;
+
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
+    $services->set(Connection::class)
+        ->factory([DriverManager::class, 'getConnection'])
+        ->arg('$params', '%db.params%');
 };

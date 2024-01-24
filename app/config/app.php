@@ -16,5 +16,6 @@ return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
     $services->set(LeapYearsController::class)
+        ->tag('controller.service_arguments')
         ->public();
 };

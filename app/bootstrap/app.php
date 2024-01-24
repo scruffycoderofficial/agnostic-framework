@@ -31,6 +31,13 @@ $container = new ContainerBuilder();
  */
 $container->setParameter('debug', getenv('APP_DEBUG'));
 $container->setParameter('charset', 'UTF-8');
+$container->setParameter('db.params', [
+    'dbname' => getenv('DB_DATABASE'),
+    'user' => getenv('DB_USERNAME'),
+    'password' => getenv('DB_PASSWORD'),
+    'host' => getenv('DB_HOST'),
+    'driver' => 'pdo_mysql',
+]);
 
 /**
  * HttpKernel dependency definitions

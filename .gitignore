@@ -2,3 +2,6 @@
 app/.env
 app/vendor
 app/node_modules
+
+app/.phpunit.cache/test-results
+app/.php-cs-fixer.cache

@@ -11,7 +11,6 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Psr\Log\LoggerInterface;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\RequestInterface;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,12 +20,10 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-//use D6\Invoice\Component\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
-use Symfony\Component\HttpKernel\Controller\ContainerControllerResolver;
 
 /**
  * @see https://symfony.com/doc/current/components/http_kernel.html#a-full-working-example

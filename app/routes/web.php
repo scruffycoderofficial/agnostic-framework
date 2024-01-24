@@ -13,6 +13,14 @@ use Symfony\Component\Routing\RouteCollection;
 
 $routes = $container->get(RouteCollection::class);
 
+$routes->add('hello', new Route('/hello/{name}', [
+        '_controller' => function (Request $request): Response {
+            return new Response(
+                sprintf("Hello %s", $request->get('name'))
+            );
+        }]
+));
+
 $routes->add('reports', new Route('/reports', [
     '_controller' => ['\D6\Invoice\App\Controller\ReportsController::listAction'],
 ]));

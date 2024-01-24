@@ -1,0 +1,106 @@
+version: '3'
+
+services:
+
+  nginx:
+    image: nginx:alpine
+    container_name: d6_nginx
+    ports:
+      - "9600:80"
+    volumes:
+      - ./app:/var/www
+      - ./sys/nginx:/etc/nginx/conf.d/
+    networks:
+      d6-invoice-system:
+        aliases:
+          - nginx
+
+  app:
+    build:
+      context: .
+      dockerfile: sys/php/Dockerfile
+    image: d6:invoicing
+    container_name: d6_invoicing_app
+    env_file:
+      - app/.env
+    environment:
+      APP_NAME: "d6 Invoicing System"
+    working_dir: /var/www
+    volumes:
+      - ./app:/var/www
+      - ./sys/php/default.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      d6-invoice-system:
+        aliases:
+          - app
+
+  mysql:
+    image: mysql:8.0
+    container_name: d6_rdbms
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: d6_invoicing_db
+      MYSQL_USER: developer
+      MYSQL_PASSWORD: root
+    ports:
+      - "9601:3306"
+    volumes:
+      - /var/lib/mysql
+      - ./sys/mysql/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      d6-invoice-system:
+        aliases:
+          - mysql
+
+  smtp:
+    platform: linux/x86_64
+    image: mailhog/mailhog
+    container_name: d6_smtp
+    logging:
+      driver: 'none'
+    ports:
+      - "9602:1025"
+      - "9603:8025"
+    networks:
+      - d6-invoice-system
+
+  phpmyadmin:
+    image: phpmyadmin:5.2.0
+    container_name: d6_phpmyadmin
+    links:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    ports:
+      - "9604:80"
+    networks:
+      d6-invoice-system:
+        aliases:
+          - phpmyadmin
+
+  testing_db:
+    image: mysql:5.7
+    container_name: d6_invoicing_test_db
+    environment:
+      MYSQL_ROOT_PASSWORD: 'testing'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_RANDOM_ROOT_PASSWORD: 0
+      MYSQL_DATABASE: 'd6_invoicing_test_db'
+      MYSQL_USER: 'testuser'
+      MYSQL_PASSWORD: 't3st!n6'
+    tmpfs:
+      - /var/lib/mysql
+    networks:
+      d6-invoice-system:
+        aliases:
+          - testing_db
+
+networks:
+  d6-invoice-system:
+    name: d6-invoice-system
+    driver: bridge
+
+volumes:
+  storage:
+    driver: local

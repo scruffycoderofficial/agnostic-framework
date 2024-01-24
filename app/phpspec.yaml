@@ -1,0 +1,8 @@
+formatter.name: pretty
+
+suites:
+  d6_default_suite:
+    namespace: D6\Invoice
+    psr4_prefix: D6\Invoice
+
+code_generation: true

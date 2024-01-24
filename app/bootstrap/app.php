@@ -81,6 +81,7 @@ $container->register('kernel', Kernel::class)
         new Reference('controller_resolver'),
         new Reference('request_stack'),
         new Reference('argument_resolver'),
-    ]);
+    ])
+    ->setPublic(true);
 
 return $container;

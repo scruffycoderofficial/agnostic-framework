@@ -22,6 +22,10 @@ if (in_array(getenv('APP_ENV'), ['test', 'local'])) {
 
 $container = include __DIR__.'/../bootstrap/app.php';
 
+if (!$container->isCompiled()) {
+    $container->compile();
+}
+
 $request = Request::createFromGlobals();
 
 $response = $container->get('kernel')->handle($request);

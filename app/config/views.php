@@ -20,16 +20,14 @@ return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
     $services->set(FilesystemLoader::class)
-        ->args([
-            __DIR__.'/../resources/views',
-        ])
+        ->args(['resources/views', '%root_dir%'])
         ->public();
 
     $services->set(Environment::class)
         ->args([
             service(FilesystemLoader::class),
             [
-                'cache' => __DIR__.'/../bootstrap/cache/views',
+                'cache' => '%root_dir%/bootstrap/cache/views',
                 'debug' => getenv('APP_DEBUG'),
             ],
         ])

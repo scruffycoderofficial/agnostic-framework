@@ -19,6 +19,7 @@ use D6\Invoice\Component\Logger\LoggerDecorator;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
@@ -28,6 +29,8 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\EventListener\ResponseListener;
 use Symfony\Component\HttpKernel\Controller\ContainerControllerResolver;
 use D6\Invoice\Component\HttpKernel\EventListener\StringResponseListener;
+use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
 
 $container = new ContainerBuilder();
 
@@ -46,9 +49,7 @@ $container->setParameter('db.params', [
 $container->setParameter('root_dir', __DIR__.'/..');
 $container->setParameter('app.logger.channel', 'daily');
 $container->setParameter('app.logger.file_path', '%root_dir%/var/log/app.log');
-
-// Assumption is that user email already exists in database
-$container->setParameter('admin.user.email', getenv('ADMIN_USER_EMAIL'));
+$container->setParameter('app.session.handler.path', '%root_dir%/var/sessions');
 
 /**
  * Monolog definitions
@@ -66,6 +67,19 @@ $container->registerForAutoconfiguration(LoggerAwareInterface::class)
 $container->register(LoggerDecorator::class)
     ->setDecoratedService(LoggerInterface::class)
     ->addArgument(new Reference(LoggerDecorator::class.'.inner'));
+
+/**
+ * Http session definition
+ */
+$container->register('session.handler', NativeFileSessionHandler::class)
+    ->addArgument('%app.session.handler.path%');
+
+$container->register('session.storage', NativeSessionStorage::class)
+    ->addArgument([[], new Reference('session.handler')]);
+
+$container->register('session', Session::class)
+    ->addArgument(new Reference('session.storage'))
+    ->addMethodCall('start');
 
 /**
  * HttpKernel dependency definitions

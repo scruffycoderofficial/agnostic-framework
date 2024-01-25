@@ -168,6 +168,7 @@ $rules = [
     ],
     'whitespace_after_comma_in_array' => true,
     'return_type_declaration' => ['space_before' => 'none'],
+    'no_unused_imports' => true,
 ];
 
 $finder = Finder::create()

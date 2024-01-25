@@ -10,26 +10,28 @@
 
 namespace D6\Invoice\App\Controller;
 
+use Exception;
+use Twig\Environment;
 use Psr\Log\LoggerInterface;
 use D6\Invoice\App\Auth\AuthService;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class LeapYearsController
  */
 class AuthController
 {
-    public function __construct(private AuthService $authService, private LoggerInterface $logger)
+    public function __construct(private Environment $twig, private AuthService $authService, private LoggerInterface $logger)
     {
     }
 
     /**
      * @param Request $request
      * @return string
+     * @throws Exception
      */
-    public function login(Request $request): Response
+    public function login(Request $request)
     {
-        return new Response('We will show the HTML Form for the User to login with here.');
+        return $this->twig->render('auth/login.html.twig');
     }
 }

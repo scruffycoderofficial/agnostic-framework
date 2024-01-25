@@ -12,7 +12,7 @@ use Symfony\Component\Routing;
 
 $routes = new Routing\RouteCollection();
 
-$routes->add('login', new Routing\Route('/login', [
+$routes->add('login', new Routing\Route('/', [
     '_controller' => [D6\Invoice\App\Controller\AuthController::class, 'login'],
 ]));
 

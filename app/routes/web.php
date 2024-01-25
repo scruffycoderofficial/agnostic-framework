@@ -12,9 +12,8 @@ use Symfony\Component\Routing;
 
 $routes = new Routing\RouteCollection();
 
-$routes->add('leap_year', new Routing\Route('/is_leap_year/{year}', [
-    'year' => null,
-    '_controller' => [D6\Invoice\App\Controller\LeapYearsController::class, 'index'],
+$routes->add('login', new Routing\Route('/login', [
+    '_controller' => [D6\Invoice\App\Controller\AuthController::class, 'login'],
 ]));
 
 return $routes;

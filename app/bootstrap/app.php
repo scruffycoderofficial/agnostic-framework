@@ -8,9 +8,14 @@
  * with this source code in the file LICENSE.
  */
 
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LoggerAwareInterface;
+use Monolog\Handler\StreamHandler;
 use Symfony\Component\Config\FileLocator;
 use D6\Invoice\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\RequestContext;
+use D6\Invoice\Component\Logger\LoggerDecorator;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\DependencyInjection\Reference;
@@ -38,6 +43,29 @@ $container->setParameter('db.params', [
     'host' => getenv('DB_HOST'),
     'driver' => 'pdo_mysql',
 ]);
+$container->setParameter('root_dir', __DIR__.'/..');
+$container->setParameter('app.logger.channel', 'daily');
+$container->setParameter('app.logger.file_path', '%root_dir%/var/log/app.log');
+
+// Assumption is that user email already exists in database
+$container->setParameter('admin.user.email', getenv('ADMIN_USER_EMAIL'));
+
+/**
+ * Monolog definitions
+ */
+$container->register(StreamHandler::class, StreamHandler::class)
+    ->addArgument('%app.logger.file_path%');
+
+$container->register(LoggerInterface::class, Logger::class)
+    ->addArgument('%app.logger.channel%')
+    ->addMethodCall('pushHandler', [new Reference(StreamHandler::class)]);
+
+$container->registerForAutoconfiguration(LoggerAwareInterface::class)
+    ->addMethodCall('setLogger', [new Reference(LoggerInterface::class)]);
+
+$container->register(LoggerDecorator::class)
+    ->setDecoratedService(LoggerInterface::class)
+    ->addArgument(new Reference(LoggerDecorator::class.'.inner'));
 
 /**
  * HttpKernel dependency definitions
@@ -50,7 +78,7 @@ $container->register('matcher', UrlMatcher::class)
 $container->register('request_stack', RequestStack::class);
 
 $container->register('controller_resolver', ContainerControllerResolver::class)
-    ->setArguments([$container]);
+    ->setArguments([$container, new Reference(LoggerInterface::class)]);
 
 $container->register('argument_resolver', ArgumentResolver::class);
 
@@ -100,7 +128,6 @@ $container->register('kernel', Kernel::class)
 $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../config'));
 $loader->load('app.php');
 $loader->load('console.php');
-$loader->load('monolog.php');
 $loader->load('database.php');
 $loader->load('views.php');
 

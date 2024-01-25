@@ -11,16 +11,23 @@
 namespace spec\D6\Invoice\App\Console\Command;
 
 use PhpSpec\ObjectBehavior;
+use Doctrine\DBAL\DriverManager;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
 use D6\Invoice\App\Console\Command\ListUsersCommand;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class ListUsersCommandSpec
  */
 class ListUsersCommandSpec extends ObjectBehavior
 {
+    public function let()
+    {
+        $this->beConstructedWith(DriverManager::getConnection([
+            'driver' => 'pdo_sqlite',
+            'dsn' => 'sqlite::memory:?cache=shared',
+        ]));
+    }
+
     public function it_is_initializable()
     {
         $this->shouldHaveType(ListUsersCommand::class);

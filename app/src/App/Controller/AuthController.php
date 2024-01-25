@@ -30,10 +30,6 @@ class AuthController
      */
     public function login(Request $request): Response
     {
-        $msg = 'We will show the HTML Form for the User to login with here.';
-
-        $this->logger->info($msg);
-
-        return new Response($msg);
+        return new Response('We will show the HTML Form for the User to login with here.');
     }
 }

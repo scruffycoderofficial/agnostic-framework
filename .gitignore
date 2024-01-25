@@ -6,3 +6,5 @@ app/var/
 
 app/.phpunit.cache/test-results
 app/.php-cs-fixer.cache
+
+app/bootstrap/cache/views/

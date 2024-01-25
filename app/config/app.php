@@ -10,6 +10,7 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use Twig\Environment;
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
 use D6\Invoice\App\Auth\AuthService;
@@ -29,6 +30,7 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$users', service(UserRepositoryInterface::class));
 
     $services->set(AuthController::class)
+        ->arg('$twig', service(Environment::class))
         ->arg('$authService', service(AuthService::class))
         ->arg('$logger', service(LoggerInterface::class))
         ->tag('controller.service_arguments')

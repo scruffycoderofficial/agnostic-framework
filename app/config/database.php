@@ -18,5 +18,5 @@ return static function (ContainerConfigurator $container): void {
 
     $services->set(Connection::class)
         ->factory([DriverManager::class, 'getConnection'])
-        ->arg('$params', '%db.params%');
+        ->arg('$params', '%app.db.params%');
 };

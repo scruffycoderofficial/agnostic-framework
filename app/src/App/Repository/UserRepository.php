@@ -20,7 +20,22 @@ class UserRepository extends DbalRepository implements UserRepositoryInterface
 {
     public function all(): iterable
     {
-        // TODO: Implement all() method.
+        $result = $this->queryBuilder->select('*')->from('users')->fetchAllAssociative();
+
+        $users = [];
+        array_map(function ($entry) use ($users) {
+            array_push($users, new User(
+                $entry['id'],
+                $entry['first_name'],
+                $entry['last_name'],
+                $entry['email'],
+                $entry['mobile'],
+                $entry['address'],
+                $entry['password']
+            ));
+        }, $result);
+
+        return $users;
     }
 
     public function ofId(int $userId): ?User

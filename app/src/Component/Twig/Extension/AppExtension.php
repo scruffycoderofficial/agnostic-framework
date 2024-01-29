@@ -11,18 +11,19 @@
 namespace D6\Invoice\Component\Twig\Extension;
 
 use Twig\TwigFilter;
+use Twig\Extension\AbstractExtension;
 
 /**
  * Class AppExtension
  *
  * @see https://www.sitepoint.com/building-custom-twig-filter-tdd-way/
  */
-class AppExtension
+class AppExtension extends AbstractExtension
 {
     /**
      * @return TwigFilter[]
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('tss', [$this, 'tssFilter']),
@@ -32,7 +33,7 @@ class AppExtension
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return 'app_extension';
     }
@@ -41,7 +42,7 @@ class AppExtension
      * @param \DateTime $timestamp
      * @return string
      */
-    public function tssFilter(\DateTime $timestamp)
+    public function tssFilter(\DateTime $timestamp): string
     {
         $TSS = ['Just now', 'Minutes ago', 'Within an hour', 'A few hours ago', 'Within one day', 'Some time back', 'Ages ago', 'From Mars'];
 

@@ -13,12 +13,19 @@ namespace spec\D6\Invoice\App\Auth;
 use PhpSpec\ObjectBehavior;
 use D6\Invoice\App\Auth\AuthService;
 use D6\Invoice\App\Repository\UserRepositoryInterface;
+use Symfony\Component\HttpFoundation\Request;
 
+
+/**
+ * Class AuthServiceSpec
+ *
+ * @package spec\D6\Invoice\App\Auth
+ */
 class AuthServiceSpec extends ObjectBehavior
 {
     public function let(UserRepositoryInterface $userRepository)
     {
-        $this->beConstructedWith($userRepository);
+        $this->beConstructedWith($userRepository, new Request());
     }
 
     public function it_is_initializable()

@@ -46,7 +46,7 @@ class ListUsersCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function getResult()
+    private function getResult(): array
     {
         $statement = $this->connection->prepare('SELECT * FROM users');
 

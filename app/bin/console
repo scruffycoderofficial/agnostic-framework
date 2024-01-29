@@ -4,7 +4,8 @@
 use D6\Invoice\Component\Console\Application;
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../bootstrap/app.php';
 
-// Resolve Application and run its
-$container->get(Application::class)->run();
+// Run Console Application
+
+(require_once __DIR__ . '/../bootstrap/app.php')
+    ->get(Application::class)->run();

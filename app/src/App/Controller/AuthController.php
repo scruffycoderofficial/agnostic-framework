@@ -17,7 +17,7 @@ use D6\Invoice\App\Auth\AuthService;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class LeapYearsController
+ * Class AuthController
  */
 class AuthController
 {
@@ -30,8 +30,15 @@ class AuthController
      * @return string
      * @throws Exception
      */
-    public function login(Request $request)
+    public function loginAction(Request $request): string
     {
         return $this->twig->render('auth/login.html.twig');
+    }
+
+    /**
+     * Destroy session and go back home
+     */
+    public function logoutAction()
+    {
     }
 }

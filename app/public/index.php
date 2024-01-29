@@ -11,6 +11,7 @@
 require_once __DIR__.'/../vendor/autoload.php';
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Turn on the lights if in local and/or testing environments
@@ -23,6 +24,8 @@ if (in_array(getenv('APP_ENV'), ['test', 'local'])) {
 $container = include __DIR__.'/../bootstrap/app.php';
 
 $request = Request::createFromGlobals();
+
+$request->setSession($container->get(Session::class));
 
 $response = $container->get('kernel')->handle($request);
 

@@ -20,8 +20,6 @@ class ErrorController
 {
     public function exception(FlattenException $exception): Response
     {
-        $msg = 'Something went wrong! ('.$exception->getMessage().')';
-
-        return new Response($msg, $exception->getStatusCode());
+        return new Response(sprintf('ControllerError: %s', $exception->getMessage()), $exception->getStatusCode());
     }
 }

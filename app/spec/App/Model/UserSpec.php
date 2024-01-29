@@ -13,15 +13,20 @@ namespace spec\D6\Invoice\App\Model;
 use PhpSpec\ObjectBehavior;
 use D6\Invoice\App\Model\User;
 
+/**
+ * Class UserSpec
+ *
+ * @package spec\D6\Invoice\App\Model
+ */
 class UserSpec extends ObjectBehavior
 {
     public function let()
     {
         $this->beConstructedWith(
             1,
-            'John',
-            'Doe',
-            'john.d@example.com',
+            'Luyanda',
+            'Siko',
+            'sikoluyanda@gmail.com',
             '0838765345',
             '13 Kowie Close, Delft, Cape Town 8000',
             'testing'
@@ -35,10 +40,10 @@ class UserSpec extends ObjectBehavior
 
     public function it_knows_about_its_properties()
     {
-        $this->getuserId()->shouldBe(1);
-        $this->getFirstName()->shouldBe('John');
-        $this->getlastName()->shouldBe('Doe');
-        $this->getEmail()->shouldBe('john.d@example.com');
+        $this->getId()->shouldBe(1);
+        $this->getFirstName()->shouldBe('Luyanda');
+        $this->getlastName()->shouldBe('Siko');
+        $this->getEmail()->shouldBe('sikoluyanda@gmail.com');
         $this->getMobile()->shouldBe('0838765345');
         $this->getAddress()->shouldBe('13 Kowie Close, Delft, Cape Town 8000');
         $this->getPassword()->shouldBe('testing');

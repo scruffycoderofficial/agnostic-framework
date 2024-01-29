@@ -39,9 +39,9 @@ INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `mobile`, `addres
 CREATE TABLE `orders` (
   `id` bigint UNSIGNED NOT NULL,
   `user_id` bigint UNSIGNED NOT NULL,
-  `date_recieved` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `date_received` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `receiver_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `receiver_address` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `receive_address` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `total_before_tax` decimal(10,2)  COLLATE utf8mb4_unicode_ci NOT NULL,
   `total_tax` decimal(10,2)  COLLATE utf8mb4_unicode_ci NOT NULL,
   `tax_per` varchar(250) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE `orders` (
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`id`, `user_id`, `date_recieved`, `receiver_name`, `receiver_address`, `total_before_tax`, `total_tax`, `tax_per`, `total_after_tax`, `amount_paid`, `total_amount_due`, `note`) VALUES (1, 123456, '2021-01-31 19:33:42', 'Luyanda Siko', '9 Kowie Close, \nLeiden, \nDelft, \nCape Town 8000\nsikoluyanda@gmail.com', 342400.00, 684800.00, '200', 1027200.00, 45454.00, 981746.00, 'This is a sample note attached to the Order of this Customer');
+INSERT INTO `orders` (`id`, `user_id`, `date_received`, `receiver_name`, `receive_address`, `total_before_tax`, `total_tax`, `tax_per`, `total_after_tax`, `amount_paid`, `total_amount_due`, `note`) VALUES (1, 1, '2021-01-31 19:33:42', 'Luyanda Siko', '9 Kowie Close, \nLeiden, \nDelft, \nCape Town 8000\nsikoluyanda@gmail.com', 342400.00, 684800.00, '200', 1027200.00, 45454.00, 981746.00, 'This is a sample note attached to the Order of this Customer');
 
 -- --------------------------------------------------------
 

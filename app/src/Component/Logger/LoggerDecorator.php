@@ -12,11 +12,13 @@ namespace D6\Invoice\Component\Logger;
 
 use Psr\Log\LoggerInterface;
 
+/**
+ * Class LoggerDecorator
+ */
 class LoggerDecorator implements LoggerInterface
 {
     public function __construct(private LoggerInterface $decoratedLogger)
     {
-        $this->decoratedLogger = $decoratedLogger;
     }
 
     public function emergency(string|\Stringable $message, array $context = []): void

@@ -183,6 +183,7 @@ $finder = Finder::create()
     ->exclude([
         __DIR__ . '/bin',
         __DIR__ . '/bootstrap/cache',
+        __DIR__.'/bootstrap/cache/views',
         __DIR__ . '/vendor',
         __DIR__ . '/var'
     ])

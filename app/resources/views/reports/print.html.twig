@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>D6 Invoice!</title>
+
+    <style type="text/css">
+        * {
+            font-family: "Victor Mono", Verdana, Arial, sans-serif;
+        }
+        table{
+            font-size: x-small;
+        }
+        tfoot tr td{
+            font-weight: bold;
+            font-size: x-small;
+        }
+        .gray {
+            background-color: lightgray
+        }
+    </style>
+
+</head>
+<body>
+
+<table width="100%">
+    <tr>
+        <td valign="top"></td>
+        <td align="right">
+            <h3 style="color: dodgerblue">D6 (<i>a Technology Innovative Company</i>)</h3>
+            <pre>
+                Sales Department
+                Octo Place, Block B,
+                Elektron Road,
+                Techno Park,
+                Stellenbosch,
+                7600
+                +27 87 820 0088
+                sales@d6.co.za
+            </pre>
+        </td>
+    </tr>
+
+</table>
+
+<table width="100%">
+    <tr>
+        <td style="color: dodgerblue"><strong>From:</strong>D6 (<i>a Technology Innovative Company</i>)</td>
+        <td><strong>To:</strong>{{ user.getFullName() }}</td>
+    </tr>
+
+</table>
+
+<br/>
+
+<table width="100%">
+    <thead style="background-color: dodgerblue; color: white;">
+    <tr>
+        <th>#</th>
+        <th>Description</th>
+        <th>Quantity</th>
+        <th>Unit Price R</th>
+        <th>Total R</th>
+    </tr>
+    </thead>
+    <tbody>
+    {%  for orderItem in orderItems %}
+    <tr>
+        <th scope="row">{{ orderItem.getId() }}</th>
+        <td>{{ orderItem.getOrderItemName() }}</td>
+        <td align="right">{{ orderItem.getOrderItemQuantity() }}</td>
+        <td align="right">{{ orderItem.getOrderItemUnitPrice() | money_amount }}</td>
+        <td align="right">{{ orderItem.getOrderItemTotalCost()  | money_amount }}</td>
+    </tr>
+    {%  endfor %}
+    </tbody>
+
+    <tfoot>
+    <tr>
+        <td colspan="3"></td>
+        <td align="right">Subtotal R</td>
+        <td align="right">{{ order.getTotalBeforeTax() | money_amount }}</td>
+    </tr>
+    <tr>
+        <td colspan="3"></td>
+        <td align="right">Tax R</td>
+        <td align="right">{{ order.getTotalTax() | money_amount }}</td>
+    </tr>
+    <tr>
+        <td colspan="3"></td>
+        <td align="right">Total R</td>
+        <td align="right">{{ order.getTotalAmountDue() | money_amount }}</td>
+    </tr>
+    </tfoot>
+</table>
+
+</body>
+</html>

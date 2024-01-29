@@ -10,17 +10,52 @@
 
 namespace D6\Invoice\Component\Repository;
 
+use Money\Money;
+use Carbon\Carbon;
+use Money\Currency;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
 
 /**
  * Class DbalRepository
  */
 abstract class DbalRepository implements Repository
 {
-    protected $queryBuilder;
+    protected QueryBuilder $queryBuilder;
 
     public function __construct(protected Connection $connection)
     {
         $this->queryBuilder = $connection->createQueryBuilder();
+    }
+
+    /**
+     * @param $date
+     * @return Carbon
+     */
+    public function dateParser($date): Carbon
+    {
+        return Carbon::parse($date);
+    }
+
+    /**
+     * @var string
+     */
+    protected string $currency = 'ZAR';
+
+    protected function makeMoney($value, $currency = ''): Money
+    {
+        if (empty($currency)) {
+            $currency = $this->currency;
+        }
+
+        return new Money($value, new Currency($currency));
+    }
+
+    /**
+     * @return string
+     */
+    protected function getMoneyLocale(): string
+    {
+        return $this->currency;
     }
 }

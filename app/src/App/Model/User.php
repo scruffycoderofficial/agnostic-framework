@@ -10,10 +10,13 @@
 
 namespace D6\Invoice\App\Model;
 
+/**
+ * Class User
+ */
 class User
 {
     public function __construct(
-        protected int $UserId,
+        protected int $id,
         protected string $firstName,
         protected string $lastName,
         protected string $email,
@@ -24,20 +27,20 @@ class User
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getUserId()
+    public function getId(): int
     {
-        return $this->UserId;
+        return $this->id;
     }
 
     /**
-     * @param string $UserId
+     * @param int $id
      * @return User
      */
-    public function setUserId($UserId)
+    public function id(int $id): int
     {
-        $this->UserId = $UserId;
+        $this->id = $id;
 
         return $this;
     }
@@ -45,7 +48,7 @@ class User
     /**
      * @return string
      */
-    public function getFirstName()
+    public function getFirstName(): string
     {
         return $this->firstName;
     }
@@ -54,7 +57,7 @@ class User
      * @param string $firstName
      * @return User
      */
-    public function setFirstName($firstName)
+    public function setFirstName(string $firstName): string
     {
         $this->firstName = $firstName;
 
@@ -64,7 +67,7 @@ class User
     /**
      * @return string
      */
-    public function getLastName()
+    public function getLastName(): string
     {
         return $this->lastName;
     }
@@ -73,7 +76,7 @@ class User
      * @param string $lastName
      * @return User
      */
-    public function setLastName($lastName)
+    public function setLastName(string $lastName): string
     {
         $this->lastName = $lastName;
 
@@ -83,7 +86,7 @@ class User
     /**
      * @return string
      */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -92,7 +95,7 @@ class User
      * @param string $email
      * @return User
      */
-    public function setEmail($email)
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
@@ -102,7 +105,7 @@ class User
     /**
      * @return string
      */
-    public function getMobile()
+    public function getMobile(): string
     {
         return $this->mobile;
     }
@@ -111,7 +114,7 @@ class User
      * @param string $mobile
      * @return User
      */
-    public function setMobile($mobile)
+    public function setMobile(string $mobile): selfs
     {
         $this->mobile = $mobile;
 
@@ -121,7 +124,7 @@ class User
     /**
      * @return string
      */
-    public function getAddress()
+    public function getAddress(): string
     {
         return $this->address;
     }
@@ -130,7 +133,7 @@ class User
      * @param string $address
      * @return User
      */
-    public function setAddress($address)
+    public function setAddress(string $address): string
     {
         $this->address = $address;
 
@@ -140,7 +143,7 @@ class User
     /**
      * @return string
      */
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -149,10 +152,15 @@ class User
      * @param string $password
      * @return User
      */
-    public function setPassword($password)
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
         return $this;
+    }
+
+    public function getFullName(): string
+    {
+        return $this->firstName.' '.$this->lastName;
     }
 }

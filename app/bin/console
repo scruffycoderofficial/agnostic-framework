@@ -1,0 +1,11 @@
+#!/usr/bin/env php
+<?php
+
+use D6\Invoice\Component\Console\Application;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+// Run Console Application
+
+(require_once __DIR__ . '/../bootstrap/app.php')
+    ->get(Application::class)->run();

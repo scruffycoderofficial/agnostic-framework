@@ -1,0 +1,55 @@
+{% extends 'layouts/app.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <div class="text-center mb-4">
+            {% include '_partials/header.html.twig' %}
+        </div>
+        <div class="table-responsive custom-table-responsive small overflow-auto">
+            <table class="table custom-table">
+                <thead>
+                <tr>
+                    <th scope="col">
+                        <label class="control control--checkbox">
+                            <input type="checkbox" class="js-check-all" />
+                            <div class="control__indicator"></div>
+                        </label>
+                    </th>
+                    <th scope="col">Order #</th>
+                    <th scope="col">Received On</th>
+                    <th scope="col">Received by</th>
+                    <th scope="col">Before Tax</th>
+                    <th scope="col">After Tax</th>
+                    <th>Paid</th>
+                    <th>Due</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for invoice in invoices %}
+                <tr scope="row">
+                    <th scope="row">
+                        <label class="control control--checkbox">
+                            <input type="checkbox" />
+                            <div class="control__indicator"></div>
+                        </label>
+                    </th>
+                    <td>{{ invoice.getId() }}</td>
+                    <td>{{ invoice.getDateReceived() | date("m/d/Y") }}</td>
+                    <td>{{ invoice.getReceiverName() }}</td>
+                    <td>{{ invoice.getTotalBeforeTax() | money_format }}</td>
+                    <td>{{ invoice.getTotalAfterTax() | money_format }}</td>
+                    <td>{{ invoice.getAmountPaid() | money_format }}</td>
+                    <td>{{ invoice.getTotalAmountDue() | money_format }}</td>
+                    <td><a href="/reports/print/{{ user.getId() }}/{{ invoice.getId() }}">Print Invoice</a> </td>
+                </tr>
+                <tr class="spacer">
+                    <td colspan="100"></td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% include '_partials/footer.html.twig' %}
+    </div>
+{% endblock %}

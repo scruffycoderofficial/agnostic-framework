@@ -12,14 +12,11 @@ namespace spec\D6\Invoice\App\Auth;
 
 use PhpSpec\ObjectBehavior;
 use D6\Invoice\App\Auth\AuthService;
-use D6\Invoice\App\Repository\UserRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
-
+use D6\Invoice\App\Repository\UserRepositoryInterface;
 
 /**
  * Class AuthServiceSpec
- *
- * @package spec\D6\Invoice\App\Auth
  */
 class AuthServiceSpec extends ObjectBehavior
 {

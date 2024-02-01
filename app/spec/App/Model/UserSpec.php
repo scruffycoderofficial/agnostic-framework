@@ -15,8 +15,6 @@ use D6\Invoice\App\Model\User;
 
 /**
  * Class UserSpec
- *
- * @package spec\D6\Invoice\App\Model
  */
 class UserSpec extends ObjectBehavior
 {

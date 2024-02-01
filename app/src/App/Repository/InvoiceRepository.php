@@ -10,9 +10,7 @@
 
 namespace D6\Invoice\App\Repository;
 
-use Money\Money;
 use Carbon\Carbon;
-use Money\Currency;
 use Doctrine\DBAL\Exception;
 use D6\Invoice\App\Model\Order;
 use D6\Invoice\App\Model\OrderItem;

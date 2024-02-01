@@ -73,7 +73,6 @@ class ReportsController
 
         $fileName = sprintf('invoice-%s-%d.pdf', $order->getDateReceived()->getTimestamp(), $order->getId());
 
-
         return new Response(
             $this->pdfDocumentService->printInvoice($fileName, $htmlReport, ),
             Response::HTTP_OK,

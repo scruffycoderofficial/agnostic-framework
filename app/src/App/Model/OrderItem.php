@@ -14,8 +14,6 @@ use Money\Money;
 
 /**
  * Class OrderItem
- *
- * @package D6\Invoice\App\Model
  */
 class OrderItem
 {

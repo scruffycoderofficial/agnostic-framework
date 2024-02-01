@@ -36,7 +36,7 @@ class PdfDocumentService
         $this->pdfWriter->render();
 
         $this->pdfWriter->stream($fileName, [
-            'isHtml5ParserEnabled' => true
+            'isHtml5ParserEnabled' => true,
         ]);
 
         return $this->pdfWriter->output();

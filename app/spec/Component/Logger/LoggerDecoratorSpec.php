@@ -11,17 +11,15 @@
 namespace spec\D6\Invoice\Component\Logger;
 
 use PhpSpec\ObjectBehavior;
-use D6\Invoice\Component\Logger\LoggerDecorator;
 use Psr\Log\LoggerInterface;
+use D6\Invoice\Component\Logger\LoggerDecorator;
 
 /**
  * Class LoggerDecoratorSpec
- *
- * @package spec\D6\Invoice\Component\Logger
  */
 class LoggerDecoratorSpec extends ObjectBehavior
 {
-    function let(LoggerInterface $logger)
+    public function let(LoggerInterface $logger)
     {
         $this->beConstructedWith($logger);
     }

@@ -18,8 +18,6 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 /**
  * Class InvoiceFormType
- *
- * @package D6\Invoice\App\Form
  */
 class InvoiceFormType extends AbstractType
 {

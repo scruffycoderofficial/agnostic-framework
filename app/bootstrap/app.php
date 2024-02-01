@@ -28,6 +28,8 @@ $loader->load('database.php');
 $loader->load('forms.php');
 $loader->load('views.php');
 $loader->load('dompdf.php');
+$loader->load('doctrine.php');
+$loader->load('migrations.php');
 
 if (! $container->isCompiled()) {
     $container->compile();

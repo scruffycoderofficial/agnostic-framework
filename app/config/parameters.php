@@ -27,7 +27,7 @@ $container->setParameter('app.views_dir', realpath('%root_dir%/../resources/view
 $container->setParameter('app.pdf_size', 'A4');
 $container->setParameter('app.pdf_orientation', 'landscape');
 $container->setParameter('app.session.admin_email', getenv('ADMIN_USER_EMAIL'));
-
+$container->setParameter('app.doctrine.orm.entity_paths', '%app.root_dir%/src/Module/StockManage/Model/Entity');
 $container->setParameter('vendor.dir', realpath(__DIR__.'/../vendor'));
 $container->setParameter('vendor.form_dir', '%vendor.dir%/symfony/form');
 $container->setParameter('vendor.validator.dir', '%vendor.dir%/symfony/validator');

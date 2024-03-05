@@ -16,7 +16,7 @@ use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
 
 $header = <<<'EOF'
-    This file is part of the D6 Assessment Project.
+    This file is part of the CoolStuff Enterprise Project.
 
     (c) Luyanda Siko <sikoluyanda@gmail.com>
 
@@ -131,12 +131,12 @@ $rules = [
     'phpdoc_indent' => true,
     'phpdoc_inline_tag_normalizer' => true,
     'phpdoc_no_access' => true,
-    'phpdoc_no_package' => true,
+    'phpdoc_no_package' => false,
     'phpdoc_no_useless_inheritdoc' => true,
     'phpdoc_scalar' => true,
     'phpdoc_single_line_var_spacing' => true,
-    'phpdoc_summary' => false,
-    'phpdoc_to_comment' => false, // override to preserve user preference
+    'phpdoc_summary' => true,
+    'phpdoc_to_comment' => true, // override to preserve user preference
     'phpdoc_tag_type' => true,
     'phpdoc_trim' => true,
     'phpdoc_types' => true,
@@ -182,8 +182,6 @@ $finder = Finder::create()
     ])
     ->exclude([
         __DIR__ . '/bin',
-        __DIR__ . '/bootstrap/cache',
-        __DIR__.'/bootstrap/cache/views',
         __DIR__ . '/vendor',
         __DIR__ . '/var'
     ])

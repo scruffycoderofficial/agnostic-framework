@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the D6 Assessment Project.
+ * This file is part of the CoolStuff Enterprise Project.
  *
  * (c) Luyanda Siko <sikoluyanda@gmail.com>
  *
@@ -13,24 +13,28 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use Twig\Environment;
 use Psr\Log\LoggerInterface;
 use Doctrine\DBAL\Connection;
-use D6\Invoice\App\Auth\AuthService;
+use Doctrine\ORM\EntityManager;
+use CoolStuff\App\Auth\AuthService;
 use Psr\Container\ContainerInterface;
-use D6\Invoice\App\Service\InvoiceService;
-use D6\Invoice\App\Controller\AuthController;
-use D6\Invoice\App\Repository\UserRepository;
+use CoolStuff\App\Service\InvoiceService;
+use CoolStuff\App\Controller\AuthController;
+use CoolStuff\App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormFactoryBuilder;
-use D6\Invoice\App\Controller\ReportsController;
-use D6\Invoice\App\Repository\InvoiceRepository;
-use D6\Invoice\Component\Service\PdfDocumentService;
-use Symfony\Component\DependencyInjection\Container;
-use D6\Invoice\App\Repository\UserRepositoryInterface;
-use D6\Invoice\App\Repository\InvoiceRepositoryInterface;
+use Symfony\Component\HttpFoundation\Response;
+use CoolStuff\App\Controller\ReportsController;
+use CoolStuff\App\Repository\InvoiceRepository;
+use CoolStuff\App\Controller\ProductsController;
+use CoolStuff\Component\Service\PdfDocumentService;
+use CoolStuff\App\Repository\UserRepositoryInterface;
+use CoolStuff\App\Repository\InvoiceRepositoryInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use CoolStuff\App\Api\Controller\ProductsController as ApiProductsController;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
-    $services->set(ContainerInterface::class, Container::class);
+    $services->set(ContainerInterface::class, ContainerBuilder::class);
 
     $services->set(Request::class)
         ->factory([Request::class, 'createFromGlobals'])
@@ -71,7 +75,18 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$forms', service(FormFactoryBuilder::class))
         ->arg('$pdfDocumentService', service(PdfDocumentService::class))
         ->arg('$userRepository', service(UserRepositoryInterface::class))
+        ->arg('$entityManager', service(EntityManager::class))
         ->arg('$log', service(LoggerInterface::class))
+        ->tag('controller.service_arguments')
+        ->public();
+
+    $services->set(ProductsController::class)
+        ->arg('$twig', service(Environment::class))
+        ->tag('controller.service_arguments')
+        ->public();
+
+    $services->set(ApiProductsController::class)
+        ->arg('$entityManager', service(EntityManager::class))
         ->tag('controller.service_arguments')
         ->public();
 };

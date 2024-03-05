@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the D6 Assessment Project.
+ * This file is part of the CoolStuff Enterprise Project.
  *
  * (c) Luyanda Siko <sikoluyanda@gmail.com>
  *
@@ -8,17 +8,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace D6\Invoice\App\Repository;
+namespace CoolStuff\App\Repository;
 
-use D6\Invoice\App\Model\User;
+use CoolStuff\App\Entity\User;
 
 /**
- * Interface UserRepositoryInterface
+ * Interface UserRepositoryInterface.
  */
 interface UserRepositoryInterface
 {
     /**
-     * @return iterable|User[]
+     * @return iterable
      */
     public function all(): iterable;
 

@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the D6 Assessment Project.
+ * This file is part of the CoolStuff Enterprise Project.
  *
  * (c) Luyanda Siko <sikoluyanda@gmail.com>
  *
@@ -8,10 +8,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace D6\Invoice\App\Model;
+namespace CoolStuff\App\Entity;
 
 /**
- * Class User
+ * Class User.
+ *
+ * @package CoolStuff\App\Model
  */
 class User
 {
@@ -38,7 +40,7 @@ class User
      * @param int $id
      * @return User
      */
-    public function id(int $id): int
+    public function id(int $id): self
     {
         $this->id = $id;
 
@@ -57,7 +59,7 @@ class User
      * @param string $firstName
      * @return User
      */
-    public function setFirstName(string $firstName): string
+    public function setFirstName(string $firstName): self
     {
         $this->firstName = $firstName;
 
@@ -76,7 +78,7 @@ class User
      * @param string $lastName
      * @return User
      */
-    public function setLastName(string $lastName): string
+    public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
 
@@ -114,7 +116,7 @@ class User
      * @param string $mobile
      * @return User
      */
-    public function setMobile(string $mobile): selfs
+    public function setMobile(string $mobile): self
     {
         $this->mobile = $mobile;
 
@@ -133,7 +135,7 @@ class User
      * @param string $address
      * @return User
      */
-    public function setAddress(string $address): string
+    public function setAddress(string $address): self
     {
         $this->address = $address;
 

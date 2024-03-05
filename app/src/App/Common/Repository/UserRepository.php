@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the D6 Assessment Project.
+ * This file is part of the CoolStuff Enterprise Project.
  *
  * (c) Luyanda Siko <sikoluyanda@gmail.com>
  *
@@ -8,21 +8,26 @@
  * with this source code in the file LICENSE.
  */
 
-namespace D6\Invoice\App\Repository;
+namespace CoolStuff\App\Repository;
 
-use D6\Invoice\App\Model\User;
-use D6\Invoice\Component\Repository\DbalRepository;
+use Iterator;
+use Doctrine\DBAL\Exception;
+use CoolStuff\App\Entity\User;
+use CoolStuff\Component\Repository\Repository;
+use PHPMentors\DomainKata\Entity\EntityInterface;
+use CoolStuff\Component\Repository\DbalRepository;
 
 /**
- * Class UserRepository
+ * Class UserRepository.
  */
 class UserRepository extends DbalRepository implements UserRepositoryInterface
 {
     public function all(): iterable
     {
+        $users = [];
+
         $result = $this->queryBuilder->select('*')->from('users')->fetchAllAssociative();
 
-        $users = [];
         array_map(function ($entry) use ($users) {
             array_push($users, new User(
                 $entry['id'],
@@ -57,11 +62,14 @@ class UserRepository extends DbalRepository implements UserRepositoryInterface
                 $result[0]['address'],
                 $result[0]['password']
             );
-        } else {
-            return null;
         }
     }
 
+    /**
+     * @param string $email
+     * @return User|null
+     * @throws Exception
+     */
     public function ofEmail(string $email): ?User
     {
         $result = $this->queryBuilder
@@ -81,8 +89,31 @@ class UserRepository extends DbalRepository implements UserRepositoryInterface
                 $result[0]['address'],
                 $result[0]['password']
             );
-        } else {
-            return null;
         }
+    }
+
+    public function getIterator(): Iterator
+    {
+        // TODO: Implement getIterator() method.
+    }
+
+    public function slice(int $start, int $size = 20): \CoolStuff\Component\Repository\Repository
+    {
+        // TODO: Implement slice() method.
+    }
+
+    public function count(): int
+    {
+        // TODO: Implement count() method.
+    }
+
+    public function add(EntityInterface $entity)
+    {
+        // TODO: Implement add() method.
+    }
+
+    public function remove(EntityInterface $entity)
+    {
+        // TODO: Implement remove() method.
     }
 }

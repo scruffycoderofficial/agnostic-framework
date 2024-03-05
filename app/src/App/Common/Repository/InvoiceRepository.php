@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the D6 Assessment Project.
+ * This file is part of the CoolStuff Enterprise Project.
  *
  * (c) Luyanda Siko <sikoluyanda@gmail.com>
  *
@@ -8,13 +8,16 @@
  * with this source code in the file LICENSE.
  */
 
-namespace D6\Invoice\App\Repository;
+namespace CoolStuff\App\Repository;
 
+use Iterator;
 use Carbon\Carbon;
 use Doctrine\DBAL\Exception;
-use D6\Invoice\App\Model\Order;
-use D6\Invoice\App\Model\OrderItem;
-use D6\Invoice\Component\Repository\DbalRepository;
+use CoolStuff\App\Model\Order;
+use CoolStuff\App\Model\OrderItem;
+use CoolStuff\Component\Repository\Repository;
+use PHPMentors\DomainKata\Entity\EntityInterface;
+use CoolStuff\Component\Repository\DbalRepository;
 
 class InvoiceRepository extends DbalRepository implements InvoiceRepositoryInterface
 {
@@ -104,5 +107,30 @@ class InvoiceRepository extends DbalRepository implements InvoiceRepositoryInter
         }, $result);
 
         return $orderItems;
+    }
+
+    public function getIterator(): Iterator
+    {
+        // TODO: Implement getIterator() method.
+    }
+
+    public function slice(int $start, int $size = 20): \CoolStuff\Component\Repository\Repository
+    {
+        // TODO: Implement slice() method.
+    }
+
+    public function count(): int
+    {
+        // TODO: Implement count() method.
+    }
+
+    public function add(EntityInterface $entity)
+    {
+        // TODO: Implement add() method.
+    }
+
+    public function remove(EntityInterface $entity)
+    {
+        // TODO: Implement remove() method.
     }
 }

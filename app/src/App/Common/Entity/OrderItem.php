@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the D6 Assessment Project.
+ * This file is part of the CoolStuff Enterprise Project.
  *
  * (c) Luyanda Siko <sikoluyanda@gmail.com>
  *
@@ -8,12 +8,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace D6\Invoice\App\Model;
+namespace CoolStuff\App\Entity;
 
 use Money\Money;
 
 /**
- * Class OrderItem
+ * Class OrderItem.
  */
 class OrderItem
 {

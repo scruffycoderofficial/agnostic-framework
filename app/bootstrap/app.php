@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the D6 Assessment Project.
+ * This file is part of the CoolStuff Enterprise Project.
  *
  * (c) Luyanda Siko <sikoluyanda@gmail.com>
  *
@@ -30,6 +30,7 @@ $loader->load('views.php');
 $loader->load('dompdf.php');
 $loader->load('doctrine.php');
 $loader->load('migrations.php');
+$loader->load('fixtures.php');
 
 if (! $container->isCompiled()) {
     $container->compile();

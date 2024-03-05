@@ -23,17 +23,23 @@
         "doctrine/orm": "^2.17",
         "doctrine/migrations": "^3.7",
         "symfony/cache": "^7.0",
-        "doctrine/annotations": "^2.0"
+        "doctrine/annotations": "^2.0",
+        "phpmentors/domain-kata": "^1.4"
     },
     "autoload": {
         "psr-4": {
-            "D6\\Invoice\\": "src/"
-        }
+            "CoolStuff\\": "src/"
+        },
+        "classmap": [
+            "db/migrations"
+        ]
     },
     "require-dev": {
         "phpspec/phpspec": "^7.5",
         "friendsofphp/php-cs-fixer": "^3.48",
         "symfony/var-dumper": "^7.0",
-        "phpunit/phpunit": "^10.5"
+        "phpunit/phpunit": "^10.5",
+        "doctrine/data-fixtures": "^1.7",
+        "fzaninotto/faker": "^1.5"
     }
 }

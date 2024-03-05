@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the D6 Assessment Project.
+ * This file is part of the CoolStuff Enterprise Project.
  *
  * (c) Luyanda Siko <sikoluyanda@gmail.com>
  *
@@ -8,10 +8,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace D6\Invoice\App\Repository;
+namespace CoolStuff\App\Repository;
 
 /**
- * Interface InvoiceRepositoryInterface
+ * Interface InvoiceRepositoryInterface.
  */
 interface InvoiceRepositoryInterface
 {

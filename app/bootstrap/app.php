@@ -11,29 +11,62 @@
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
+use CoolStuff\App\DependencyInjection\CompilerPass\ProductsWebScraperCompilerPass;
 
 $container = new ContainerBuilder();
 
+/*
+ * Sets ProxyManager to allow for managing Lazy services
+ */
+if (class_exists(RuntimeInstantiator::class) && method_exists($container, 'setProxyInstantiator')) {
+    $container->setProxyInstantiator(new RuntimeInstantiator());
+}
+
+/**
+ * Setup PHP File Loader.
+ */
 $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../config'));
 
-$loader->load('parameters.php');
-$loader->load('monolog.php');
-$loader->load('kernel.php');
-$loader->load('session.php');
-$loader->load('events.php');
+try {
+    /* Configuration parameters */
+    $loader->load('parameters.php');
 
-$loader->load('app.php');
-$loader->load('console.php');
-$loader->load('database.php');
-$loader->load('forms.php');
-$loader->load('views.php');
-$loader->load('dompdf.php');
-$loader->load('doctrine.php');
-$loader->load('migrations.php');
-$loader->load('fixtures.php');
+    /* Application business configurations */
+    $loader->load('products.php');
 
-if (! $container->isCompiled()) {
-    $container->compile();
+    /*
+     * External service configurations
+     */
+    $loader->load('goutte.php');
+    $loader->load('monolog.php');
+
+    /* Core framework configurations */
+    $loader->load('kernel.php');
+    $loader->load('session.php');
+    $loader->load('events.php');
+
+    /* Application framework configurations */
+    $loader->load('app.php');
+    $loader->load('console.php');
+
+    $loader->load('forms.php');
+    $loader->load('views.php');
+    $loader->load('dompdf.php');
+    $loader->load('doctrine.php');
+    $loader->load('migrations.php');
+    $loader->load('fixtures.php');
+} catch (Exception $exc) {
+} finally {
+    /* Add CompilerPassInterface definitions */
+    $container->addCompilerPass(new ProductsWebScraperCompilerPass());
+
+    /*
+     * Compile Container, if not compiled already
+     */
+    if (! $container->isCompiled()) {
+        $container->compile();
+    }
 }
 
 return $container;

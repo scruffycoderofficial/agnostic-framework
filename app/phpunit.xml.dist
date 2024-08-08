@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd" bootstrap="vendor/autoload.php" executionOrder="depends,defects" beStrictAboutOutputDuringTests="true" failOnRisky="true" failOnWarning="true" colors="true" cacheDirectory=".phpunit.cache" requireCoverageMetadata="false" beStrictAboutCoverageMetadata="true">
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+        bootstrap="tests/bootstrap.php"
+        executionOrder="depends,defects"
+        beStrictAboutOutputDuringTests="true"
+        failOnRisky="true"
+        failOnWarning="true"
+        colors="true"
+        cacheDirectory=".phpunit.cache"
+        requireCoverageMetadata="false"
+        beStrictAboutCoverageMetadata="true"
+>
   <testsuites>
     <testsuite name="default">
       <directory>tests</directory>
     </testsuite>
     <testsuite name="app">
-      <directory>src/Tests</directory>
+      <directory>tests</directory>
+    </testsuite>
+    <testsuite name="customers">
+      <directory>modules/Customers/Tests</directory>
+    </testsuite>
+    <testsuite name="invoicing">
+      <directory>modules/Invoicing/Tests</directory>
+    </testsuite>
+    <testsuite name="suppliers">
+      <directory>modules/Suppliers/Tests</directory>
+    </testsuite>
+    <testsuite name="partners">
+      <directory>modules/Partners/Tests</directory>
+    </testsuite>
+    <testsuite name="shared">
+      <directory>src/Shared/Tests</directory>
+    </testsuite>
+    <testsuite name="workflow">
+      <directory>src/Shared/Workflow/Tests</directory>
     </testsuite>
   </testsuites>
   <source>
@@ -13,4 +43,14 @@
       <directory suffix=".php">src</directory>
     </include>
   </source>
+  <php>
+    <env name="APP_ENV" value="testing" force="true"/>
+
+    <env name="DB_CONNECTION" value="mysql" force="true"/>
+    <env name="DB_HOST" value="testing_db" force="true"/>
+    <env name="DB_DATABASE" value="coolstuff_solutions_testing_db" force="true"/>
+    <env name="DB_USERNAME" value="testuser" force="true"/>
+    <env name="DB_PASSWORD" value="t3st!n6" force="true"/>
+    <ini name="memory_limit" value="-1"/>
+  </php>
 </phpunit>

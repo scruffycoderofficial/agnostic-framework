@@ -4,13 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Invoice Service</title>
+    <title>CoolStuff Administrator</title>
     <link rel="stylesheet" href="/css/app.css">
-    <link rel="stylesheet" href="/css/invoice/create.css">
 </head>
-<body style="background-color: antiquewhite">
-    {% block content %}
-    {% endblock %}
+<body>
+{{ include('_partials/navbar.html.twig') }}
+    <div class="container">
+
+
+        {{ flash.flashbag() }}
+
+        {% block content '' %}
+
+        {{ include('_partials/footer.html.twig') }}
+    </div>
+    {% block javascript '' %}
     <script src="/js/app.js"></script>
 </body>
 </html>

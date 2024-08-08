@@ -145,7 +145,6 @@ $rules = [
     'short_scalar_cast' => true,
     'simplified_null_return' => false, // disabled as "risky"
     'single_blank_line_at_eof' => true,
-    'single_blank_line_before_namespace' => true,
     'single_class_element_per_statement' => [
         'elements' => ['const', 'property'],
     ],
@@ -179,6 +178,8 @@ $finder = Finder::create()
         __DIR__ . '/spec',
         __DIR__ . '/src',
         __DIR__ . '/public',
+        __DIR__ . '/lib',
+        __DIR__ . '/modules'
     ])
     ->exclude([
         __DIR__ . '/bin',
@@ -192,6 +193,6 @@ $finder = Finder::create()
 
 return (new Config)
     ->setFinder($finder)
-    ->setRules($rules)
+    ->setRules(array_merge(['@Symfony' => true], $rules))
     ->setRiskyAllowed(true)
     ->setUsingCache(true);

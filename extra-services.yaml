@@ -1,0 +1,252 @@
+services:
+
+  mongodb:
+    container_name: coolstuff_mongodb
+    image: mongo
+    env_file:
+      - app/.env
+    command: [ --auth ]
+    restart: always
+    volumes:
+      - ./sys/mongodb/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
+      - ./sys/mongodb:/data/db
+    ports:
+      - '271017-27019:271017-27019'
+    labels:
+      - "traefik.enable=false"
+    networks:
+      coolstuff-solutions:
+        aliases:
+          - mongodb
+
+  mongo-express:
+    container_name: coolstuff_mongodb_admin
+    image: mongo-express:0.54.0
+    env_file:
+      - app/.env
+    restart: always
+    depends_on:
+      - mongodb
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mongo-express.entrypoints=web"
+      - "traefik.http.routers.mongo-express.rule=Host(`mongo.coolstuff.localhost`)"
+      - "traefik.http.services.mongo-express.loadbalancer.server.port=8081"
+      - "traefik.docker.network=coolstuff-solutions"
+      - "traefik.default.protocol=http"
+      - "traefik.backend=mongo-express"
+    networks:
+      coolstuff-solutions:
+        aliases:
+          - mongodb_express
+
+  rabbitmq:
+    container_name: coolstuff_rabbitmq
+    build:
+      context: .
+      dockerfile: sys/rabbitmq/Dockerfile
+    networks:
+      coolstuff-solutions:
+        aliases:
+          - rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=coolstuff
+      - RABBITMQ_DEFAULT_PASS=c007st4ff
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rabbitmq.entrypoints=web"
+      - "traefik.http.routers.rabbitmq.rule=Host(`rmq.coolstuff.localhost`)"
+      - "traefik.http.services.rabbitmq.loadbalancer.server.port=15672"
+      - "traefik.docker.network=coolstuff-solutions"
+      - "traefik.default.protocol=http"
+      - "traefik.backend=rabbitmq"
+    volumes:
+      - ./sys/rabbitmq:/var/lib/rabbitmq:cached
+
+  cache:
+    container_name: coolstuff_redis_cache
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes:
+      - cache:/data
+    labels:
+      - "traefik.enable=false"
+    networks:
+      coolstuff-solutions:
+        aliases:
+          - cache
+
+  redis-admin:
+    container_name: coolstuff_redis_commander
+    image: rediscommander/redis-commander:latest
+    hostname: redis-admin
+    depends_on:
+      - cache
+    environment:
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+      - HTTP_USER=cacheuser
+      - HTTP_PASSWORD=p@ssw0rd
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.redis-admin.entrypoints=web"
+      - "traefik.http.routers.redis-admin.rule=Host(`redis.coolstuff.localhost`)"
+      - "traefik.http.services.redis-admin.loadbalancer.server.port=8081"
+      - "traefik.docker.network=coolstuff-solutions"
+      - "traefik.default.protocol=http"
+      - "traefik.backend=redis-admin"
+    networks:
+      coolstuff-solutions:
+        aliases:
+          - redisadmin
+    restart: unless-stopped
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.4.0
+    container_name: coolstuff_elastic_search
+    environment:
+      - cluster.name=cp-es-default-cluster
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - http.cors.enabled=true
+      - http.cors.allow-origin=*
+      - discovery.zen.minimum_master_nodes=1
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - ./data/elasticsearch:/usr/share/elasticsearch/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.elasticsearch.entrypoints=web"
+      - "traefik.http.routers.elasticsearch.rule=Host(`es.coolstuff.localhost`)"
+      - "traefik.http.services.elasticsearch.loadbalancer.server.port=9200"
+      - "traefik.docker.network=coolstuff-solutions"
+      - "traefik.default.protocol=http"
+      - "traefik.backend=elasticsearch"
+    networks:
+      coolstuff-solutions:
+        aliases:
+          - elasticsearch
+
+  kibana:
+    image: 'docker.elastic.co/kibana/kibana:7.4.0'
+    container_name: coolstuff_kibana
+    environment:
+      SERVER_NAME: kibana.local
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.kibana.entrypoints=web"
+      - "traefik.http.routers.kibana.rule=Host(`kibana.coolstuff.localhost`)"
+      - "traefik.http.services.kibana.loadbalancer.server.port=5601"
+      - "traefik.docker.network=coolstuff-solutions"
+      - "traefik.default.protocol=http"
+      - "traefik.backend=kibana"
+    networks:
+      coolstuff-solutions:
+        aliases:
+          - kibana
+
+  openldap:
+    image: osixia/openldap:1.5.0
+    container_name: coolstuff_openldap
+    environment:
+      LDAP_LOG_LEVEL: "256"
+      LDAP_ORGANISATION: "Coolstuff Enterprise"
+      LDAP_DOMAIN: "ldap.coolstuff.localhost"
+      LDAP_BASE_DN: ""
+      LDAP_ADMIN_PASSWORD: "admin"
+      LDAP_CONFIG_PASSWORD: "config"
+      LDAP_READONLY_USER: "false"
+      #LDAP_READONLY_USER_USERNAME: "readonly"
+      #LDAP_READONLY_USER_PASSWORD: "readonly"
+      LDAP_RFC2307BIS_SCHEMA: "false"
+      LDAP_BACKEND: "mdb"
+      LDAP_TLS: "true"
+      LDAP_TLS_CRT_FILENAME: "ldap.crt"
+      LDAP_TLS_KEY_FILENAME: "ldap.key"
+      LDAP_TLS_DH_PARAM_FILENAME: "dhparam.pem"
+      LDAP_TLS_CA_CRT_FILENAME: "ca.crt"
+      LDAP_TLS_ENFORCE: "false"
+      LDAP_TLS_CIPHER_SUITE: "SECURE256:-VERS-SSL3.0"
+      LDAP_TLS_VERIFY_CLIENT: "demand"
+      LDAP_REPLICATION: "false"
+      #LDAP_REPLICATION_CONFIG_SYNCPROV: 'binddn="cn=admin,cn=config" bindmethod=simple credentials="$$LDAP_CONFIG_PASSWORD" searchbase="cn=config" type=refreshAndPersist retry="60 +" timeout=1 starttls=critical'
+      #LDAP_REPLICATION_DB_SYNCPROV: 'binddn="cn=admin,$$LDAP_BASE_DN" bindmethod=simple credentials="$$LDAP_ADMIN_PASSWORD" searchbase="$$LDAP_BASE_DN" type=refreshAndPersist interval=00:00:00:10 retry="60 +" timeout=1 starttls=critical'
+      #LDAP_REPLICATION_HOSTS: "#PYTHON2BASH:['ldap://ldap.example.org','ldap://ldap2.example.org']"
+      KEEP_EXISTING_CONFIG: "false"
+      LDAP_REMOVE_CONFIG_AFTER_SETUP: "true"
+      LDAP_SSL_HELPER_PREFIX: "ldap"
+    tty: true
+    stdin_open: true
+    volumes:
+      - /var/lib/ldap
+      - /etc/ldap/slapd.d
+      - /container/service/slapd/assets/certs/
+    # For replication to work correctly, domainname and hostname must be
+    # set correctly so that "hostname"."domainname" equates to the
+    # fully-qualified domain name for the host.
+    domainname: "ldap.coolstuff.localhost"
+    hostname: openldap
+    labels:
+      - "traefik.enable=false"
+    networks:
+      coolstuff-solutions:
+        aliases:
+          - openldap
+
+  phpldapadmin:
+    image: osixia/phpldapadmin:latest
+    container_name: coolstuff_phpldapadmin
+    environment:
+      PHPLDAPADMIN_LDAP_HOSTS: "openldap"
+      PHPLDAPADMIN_HTTPS: "false"
+    depends_on:
+      - openldap
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.phpldapadmin.entrypoints=web"
+      - "traefik.http.routers.phpldapadmin.rule=Host(`ldapadmin.coolstuff.localhost`)"
+      - "traefik.http.services.phpldapadmin.loadbalancer.server.port=80"
+      - "traefik.docker.network=coolstuff-solutions"
+      - "traefik.default.protocol=http"
+      - "traefik.backend=phpldapadmin"
+    networks:
+      coolstuff-solutions:
+        aliases:
+          - phpldapadmin
+
+  idp:
+    image: kenchan0130/simplesamlphp
+    container_name: coolstuff_idp_sp
+    environment:
+      SIMPLESAMLPHP_SP_ENTITY_ID: http://app.example.com
+      SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE: http://idp.coolstuff.localhost/simplesaml/module.php/saml/sp/saml2-acs.php/test-sp
+      SIMPLESAMLPHP_SP_SINGLE_LOGOUT_SERVICE: http://idp.coolstuff.localhost/simplesaml/module.php/saml/sp/saml2-logout.php/test-sp
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.idp.entrypoints=web"
+      - "traefik.http.routers.idp.rule=Host(`idp.coolstuff.localhost`)"
+      - "traefik.http.services.idp.loadbalancer.server.port=6200"
+      - "traefik.docker.network=coolstuff-solutions"
+      - "traefik.default.protocol=http"
+      - "traefik.backend=idp"
+    networks:
+      coolstuff-solutions:
+        aliases:
+          - idp_sp

@@ -14,6 +14,13 @@ app/public/css/app.css
 app/public/js/app.js
 app/plantuml.md
 app/scraper.php
+app/public/fonts
+app/public/images/
+sys/rabbitmq/.erlang.cookie
+sys/rabbitmq/mnesia/
+sys/mongodb/
+data/
+docs/
 
 
 app/public/js/app.js

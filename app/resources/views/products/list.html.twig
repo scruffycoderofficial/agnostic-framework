@@ -1,0 +1,39 @@
+{% extends 'products/layout.html.twig' %}
+
+{% block main %}
+    <div class="container">
+        <div class="col-md-10">
+            <div class="row justify-content-center">
+                <h4>Create Product</h4>
+                <table class="table table-responsive table-striped">
+                    <tr>
+                        <td style="font-weight: bold">ID</td>
+                        <td style="font-weight: bold">Name</td>
+                        <td style="font-weight: bold">Tagline</td>
+                        <td style="font-weight: bold">Description</td>
+                        <td style="font-weight: bold">Brand</td>
+                        <td style="font-weight: bold">Active</td>
+                        <td style="font-weight: bold">Actions</td>
+                    </tr>
+                    {% for product in products %}
+                        <tr>
+                            <td>{{ product.getId() }}</td>
+                            <td>{{ product.getName() }}</td>
+                            <td>{{ product.getTagline() }}</td>
+                            <td>{{ product.getDescription() }}</td>
+                            <td>{{ product.getBrand() }}</td>
+                            <td>{{ product.isActive() ? 'Yes' : 'No' }}</td>
+                            <td>
+                                <span><a href="/admin/products/{{ product.getId() }}/view" target="_blank">View</a>
+                                    <a href="/admin/products/{{ product.getId() }}/update" target="_blank">Update</a>
+                                    <a href="/admin/journals/product/{{ product.getId() }}/create" target="_blank">Entry Journal</a>
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

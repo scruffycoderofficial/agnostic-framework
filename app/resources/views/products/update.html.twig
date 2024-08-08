@@ -1,0 +1,42 @@
+{% extends 'products/layout.html.twig' %}
+
+{% block main %}
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="page-header clearfix">
+                <h2>Update <span class="text-success">{{ product.getName() }}</span></h2>
+            </div>
+            <form
+                    id="product-create-form"
+                    method="post"
+                    action="{{ path('admin_products_update', { 'productId' : product.getId() }) }}"
+                    enctype="multipart/form-data"
+                    role="form"
+                    novalidate>
+                <div class="load-animate animated fadeInUp">
+                    <div class="row col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                        <span class="form-inline">
+						    {{ form_widget(form) }}
+					    </span>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="row col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                        <div class="form-group pull-left">
+                            <button
+                                    class="btn btn-default btn-outline-primary commit-product-update"
+                                    id="clear"
+                                    type="reset">Commit
+                            </button>
+                            <button
+                                    class="btn btn-warning cancel-product-add"
+                                    id="clear"
+                                    type="reset">Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

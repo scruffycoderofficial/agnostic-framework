@@ -12,6 +12,9 @@ app/var/cache/*
 app/var/session/*
 app/public/css/app.css
 app/public/js/app.js
+app/plantuml.md
+app/scraper.php
+
 
 app/public/js/app.js
 app/public/css/app.css

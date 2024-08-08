@@ -1,10 +1,8 @@
 #!/usr/bin/env php
 <?php
 
-use CoolStuff\Component\Console\Application;
-
 require_once __DIR__ . '/../vendor/autoload.php';
 
 (require_once __DIR__ . '/../bootstrap/app.php')
-    ->get(Application::class)
+    ->get('coolstuff.console.app')
     ->run();

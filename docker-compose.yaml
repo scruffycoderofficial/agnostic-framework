@@ -2,14 +2,40 @@ version: '3'
 
 services:
 
+  traefik:
+    image: "traefik:v2.6.0"
+    container_name: coolstuff_solutions_traefik
+    command:
+      - "--log.level=DEBUG"
+      - "--providers.docker"
+      - "--api.dashboard=true"
+      - "--entrypoints.web.address=:80"
+      - "--accesslog.filepath=/data/access.log"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=coolstuff-solutions"
+    ports:
+      - "80:80"
+      - "8080:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.http.routers.frontend.entrypoints=web"
+      - "traefik.http.routers.frontend.rule=Host(`coolstuff.localhost`)"
+    networks:
+      coolstuff-solutions:
+        aliases:
+          - traefik
+
   nginx:
     image: nginx:alpine
     container_name: coolstuff_solutions_nginx
-    ports:
-      - "9700:80"
     volumes:
       - ./app:/var/www
       - ./sys/nginx:/etc/nginx/conf.d/
+    labels:
+      - "traefik.enable=true"
     networks:
       coolstuff-solutions:
         aliases:
@@ -30,10 +56,34 @@ services:
       - ./app:/var/www
       - ./app/var/:/var/www/var:rw
       - ./sys/php/default.ini:/usr/local/etc/php/conf.d/local.ini
+    labels:
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.http.routers.app.entrypoints=web"
+      - "traefik.http.routers.app.rule=Host(`app.coolstuff.localhost`)"
+      - "traefik.http.services.app.loadbalancer.server.port=80"
+      - "traefik.backend=app"
     networks:
       coolstuff-solutions:
         aliases:
           - app
+
+  portal:
+    container_name: coolstuff_portal
+    image: coolstuffportal:local
+    build:
+      context: .
+      dockerfile: sys/portal/Dockerfile
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portal.entrypoints=web"
+      - "traefik.http.routers.portal.rule=Host(`portal.coolstuff.localhost`)"
+      - "traefik.http.services.portal.loadbalancer.server.port=80"
+      - "traefik.docker.network=coolstuff-solutions"
+      - "traefik.default.protocol=http"
+      - "traefik.backend=portal"
+    networks:
+      - coolstuff-solutions
 
   mysql:
     image: mysql:8.0
@@ -47,7 +97,8 @@ services:
       - "9701:3306"
     volumes:
       - /var/lib/mysql
-      - ./sys/mysql/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    labels:
+      - "traefik.enable=false"
     networks:
       coolstuff-solutions:
         aliases:
@@ -59,9 +110,14 @@ services:
     container_name: coolstuff_solutions_smtp
     logging:
       driver: 'none'
-    ports:
-      - "9702:1025"
-      - "9703:8025"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.smtp.entrypoints=web"
+      - "traefik.http.routers.smtp.rule=Host(`smtp.coolstuff.localhost`)"
+      - "traefik.http.services.smtp.loadbalancer.server.port=8025"
+      - "traefik.docker.network=coolstuff-solutions"
+      - "traefik.default.protocol=http"
+      - "traefik.backend=smtp"
     networks:
       coolstuff-solutions:
         aliases:
@@ -75,8 +131,14 @@ services:
     environment:
       PMA_HOST: mysql
       PMA_PORT: 3306
-    ports:
-      - "9704:80"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.phpmyadmin.entrypoints=web"
+      - "traefik.http.routers.phpmyadmin.rule=Host(`pma.coolstuff.localhost`)"
+      - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"
+      - "traefik.docker.network=coolstuff-solutions"
+      - "traefik.default.protocol=http"
+      - "traefik.backend=phpmyadmin"
     networks:
       coolstuff-solutions:
         aliases:
@@ -94,6 +156,8 @@ services:
       MYSQL_PASSWORD: 't3st!n6'
     tmpfs:
       - /var/lib/mysql
+    labels:
+      - "traefik.enable=false"
     networks:
       coolstuff-solutions:
         aliases:
@@ -105,5 +169,5 @@ networks:
     driver: bridge
 
 volumes:
-  storage:
+  db:
     driver: local

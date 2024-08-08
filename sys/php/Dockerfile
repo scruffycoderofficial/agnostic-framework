@@ -4,14 +4,23 @@ ENV USER=www
 ENV GROUP=www
 
 # Install system dependencies
-RUN apt-get update && apt-get install libldap2-dev -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     curl \
+    libldap2-dev \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    libgd-dev \
     zip \
-    unzip
+    zlib1g-dev \
+    librabbitmq-dev \
+    unzip \
+    ghostscript \
+    fontconfig \
+    graphviz
+
+RUN pecl install amqp && docker-php-ext-enable amqp
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*

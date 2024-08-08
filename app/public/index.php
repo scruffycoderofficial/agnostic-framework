@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the D6 Assessment Project.
+ * This file is part of the CoolStuff Enterprise Project.
  *
  * (c) Luyanda Siko <sikoluyanda@gmail.com>
  *
@@ -10,23 +10,25 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 
+use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
+use CoolStuff\Component\Foundation\Application;
+use Symfony\Component\ErrorHandler\ErrorHandler;
 
-/**
+/*
  * Turn on the lights if in local and/or testing environments
  */
-if (in_array(getenv('APP_ENV'), ['test', 'local'])) {
+if (in_array(getenv('APP_ENV'), ['testing', 'local'])) {
     ini_set('display_errors', 1);
     error_reporting(-1);
+
+    Debug::enable();
+
+    /*
+     * Register Error handling
+     */
+    ErrorHandler::register();
 }
 
-$container = include __DIR__.'/../bootstrap/app.php';
-
-$request = Request::createFromGlobals();
-
-$request->setSession($container->get(Session::class));
-
-$response = $container->get('kernel')->handle($request);
-
-$response->send();
+(new Application(require_once __DIR__.'/../bootstrap/app.php'))
+    ->run(Request::createFromGlobals());

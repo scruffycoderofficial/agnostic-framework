@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the D6 Assessment Project.
+ * This file is part of the CoolStuff Enterprise Project.
  *
  * (c) Luyanda Siko <sikoluyanda@gmail.com>
  *
@@ -8,39 +8,44 @@
  * with this source code in the file LICENSE.
  */
 
-namespace D6\Invoice\App\Controller;
+namespace CoolStuff\App\Controller;
 
 use Twig\Environment;
 use Psr\Log\LoggerInterface;
-use D6\Invoice\App\Auth\AuthService;
-use D6\Invoice\App\Service\InvoiceService;
-use D6\Invoice\App\Repository\UserRepository;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
+use CoolStuff\App\Form\Invoice\CreateFormType;
 use Symfony\Component\Form\FormFactoryBuilder;
 use Symfony\Component\HttpFoundation\Response;
-use D6\Invoice\Component\Service\PdfDocumentService;
+use CoolStuff\Shared\Repository\UserRepository;
+use CoolStuff\Shared\Service\Invoice\InvoiceService;
+use CoolStuff\Component\Service\DocumentWriter\PdfDocumentWriter;
 
 /**
- * Class ReportsController
+ * Class ReportsController.
+ *
+ * @package CoolStuff\App\Controller
  */
 class ReportsController
 {
     const ADMIN_EMAIL = 'luyandasiko@gmail.com';
 
     public function __construct(
-        private AuthService $authService,
         private InvoiceService $invoiceService,
         private Environment $twig,
         private FormFactoryBuilder $forms,
-        private PdfDocumentService $pdfDocumentService,
+        private PdfDocumentWriter $pdfDocumentService,
         private UserRepository $userRepository,
+        private EntityManager $entityManager,
         private ?LoggerInterface $log = null
     ) {
     }
 
     public function showAction(Request $request): string
     {
-        if (! $request->query->has('user_email')) {
+        $userEmail = 'luyandasiko@gmail.com';
+
+        if (! $userEmail === $request->query->has('user_email')) {
             $userEmail = self::ADMIN_EMAIL;
         }
 
@@ -54,9 +59,15 @@ class ReportsController
         ]);
     }
 
-    public function updateAction(Request $request): string
+    public function createAction(Request $request): string
     {
-        return $this->twig->render('reports/update.html.twig');
+        $invoiceForm = $this->forms
+            ->getFormFactory()
+            ->create(CreateFormType::class);
+
+        return $this->twig->render('reports/create.html.twig', [
+            'form' => $invoiceForm->createView(),
+        ]);
     }
 
     public function invoiceAction(int $userId, int $orderId): Response
@@ -74,7 +85,7 @@ class ReportsController
         $fileName = sprintf('invoice-%s-%d.pdf', $order->getDateReceived()->getTimestamp(), $order->getId());
 
         return new Response(
-            $this->pdfDocumentService->printInvoice($fileName, $htmlReport, ),
+            $this->pdfDocumentService->writeDocument($fileName, $htmlReport),
             Response::HTTP_OK,
             ['Content-Type' => 'application/pdf']
         );

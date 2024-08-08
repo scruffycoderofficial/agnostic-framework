@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the D6 Assessment Project.
+ * This file is part of the CoolStuff Enterprise Project.
  *
  * (c) Luyanda Siko <sikoluyanda@gmail.com>
  *
@@ -8,27 +8,25 @@
  * with this source code in the file LICENSE.
  */
 
-namespace D6\Invoice\App\Controller;
+namespace CoolStuff\App\Controller;
 
-use Exception;
 use Twig\Environment;
 use Psr\Log\LoggerInterface;
-use D6\Invoice\App\Auth\AuthService;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class AuthController
+ * Class AuthController.
+ *
+ * @package CoolStuff\App\Controller
  */
 class AuthController
 {
-    public function __construct(private Environment $twig, private AuthService $authService, private LoggerInterface $logger)
+    public function __construct(private Environment $twig, private LoggerInterface $logger)
     {
     }
 
     /**
-     * @param Request $request
-     * @return string
-     * @throws Exception
+     * @throws \Exception
      */
     public function loginAction(Request $request): string
     {
@@ -36,7 +34,7 @@ class AuthController
     }
 
     /**
-     * Destroy session and go back home
+     * Destroy session and go back home.
      */
     public function logoutAction()
     {

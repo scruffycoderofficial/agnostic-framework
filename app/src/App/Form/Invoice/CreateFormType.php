@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the D6 Assessment Project.
+ * This file is part of the CoolStuff Enterprise Project.
  *
  * (c) Luyanda Siko <sikoluyanda@gmail.com>
  *
@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace D6\Invoice\App\Form;
+namespace CoolStuff\App\Form\Invoice;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,9 +17,11 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 /**
- * Class InvoiceFormType
+ * Class CreateFormType.
+ *
+ * @package CoolStuff\App\Form\Invoice
  */
-class InvoiceFormType extends AbstractType
+class CreateFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

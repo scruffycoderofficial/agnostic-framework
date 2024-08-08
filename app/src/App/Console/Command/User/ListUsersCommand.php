@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the D6 Assessment Project.
+ * This file is part of the CoolStuff Enterprise Project.
  *
  * (c) Luyanda Siko <sikoluyanda@gmail.com>
  *
@@ -8,7 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace D6\Invoice\App\Console\Command;
+declare(strict_types=1);
+
+namespace CoolStuff\App\Console\Command\User;
 
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Console\Helper\Table;
@@ -17,7 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class ListUsersCommand
+ * Class ListUsersCommand.
  */
 class ListUsersCommand extends Command
 {
@@ -30,7 +32,7 @@ class ListUsersCommand extends Command
 
     protected function configure()
     {
-        $this->setDescription('Lists all users registered within the system."');
+        $this->setDescription('Lists all users registered within the system.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -48,25 +50,28 @@ class ListUsersCommand extends Command
 
     private function getResult(): array
     {
-        $statement = $this->connection->prepare('SELECT * FROM users');
-
-        $resultSet = $statement->executeQuery();
-
         $results = [];
 
-        array_map(function ($entry) use (&$results) {
-            array_push($results, [
-                $entry['id'],
-                $entry['first_name'],
-                $entry['last_name'],
-                $entry['email'],
-                $entry['mobile'],
-                $entry['address'],
-                $entry['created_at'],
-                $entry['updated_at'],
-            ]);
-        }, $resultSet->fetchAllAssociative());
+        try {
+            $statement = $this->connection->prepare('SELECT * FROM users');
 
-        return $results;
+            $resultSet = $statement->executeQuery();
+
+            array_map(function ($entry) use (&$results) {
+                array_push($results, [
+                    $entry['id'],
+                    $entry['first_name'],
+                    $entry['last_name'],
+                    $entry['email'],
+                    $entry['mobile'],
+                    $entry['address'],
+                    $entry['created_at'],
+                    $entry['updated_at'],
+                ]);
+            }, $resultSet->fetchAllAssociative());
+        } catch (\Exception $exc) {
+        } finally {
+            return $results;
+        }
     }
 }

@@ -13,7 +13,7 @@
         "doctrine/dbal": "^3.7",
         "moneyphp/money": "^4.4",
         "dompdf/dompdf": "^2.0",
-        "nesbot/carbon": "^2.72",
+        "nesbot/carbon": "^3.0",
         "symfony/form": "^7.0",
         "symfony/validator": "^7.0",
         "symfony/translation": "^6.4",
@@ -24,14 +24,26 @@
         "doctrine/migrations": "^3.7",
         "symfony/cache": "^7.0",
         "doctrine/annotations": "^2.0",
-        "phpmentors/domain-kata": "^1.4"
+        "phpmentors/domain-kata": "^1.4",
+        "beberlei/doctrineextensions": "^1.4",
+        "fabpot/goutte": "^4.0",
+        "masterminds/html5": "^2.8",
+        "intervention/image": "^3.4",
+        "symfony/workflow": "^7.0",
+        "symfony/proxy-manager-bridge": "^6.4",
+        "symfony/asset": "^7.0",
+        "symfony/mailer": "^7.0",
+        "symfony/twig-bundle": "^7.0"
     },
     "autoload": {
         "psr-4": {
-            "CoolStuff\\": "src/"
+            "CoolStuff\\": ["src/", "lib/", "modules/"],
+            "CoolStuff\\Tests\\": "tests/",
+            "Symfony\\Bridge\\Doctrine\\": "lib/vendor/doctrine-bridge"
         },
         "classmap": [
-            "db/migrations"
+            "db/migrations",
+            "db/fixtures"
         ]
     },
     "require-dev": {
@@ -40,6 +52,7 @@
         "symfony/var-dumper": "^7.0",
         "phpunit/phpunit": "^10.5",
         "doctrine/data-fixtures": "^1.7",
-        "fzaninotto/faker": "^1.5"
+        "fzaninotto/faker": "^1.5",
+        "symfony/phpunit-bridge": "^7.0"
     }
 }

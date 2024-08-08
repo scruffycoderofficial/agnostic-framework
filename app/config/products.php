@@ -11,24 +11,21 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Goutte\Client;
-use Doctrine\ORM\EntityManagerInterface;
-use CoolStuff\App\Service\Product\ProductsScraper;
-use CoolStuff\App\Common\Repository\ProductRepository;
+use CoolStuff\Shared\Service\Product\ProductsScraper;
 use CoolStuff\Component\Service\WebScraper\WebScraper;
-use CoolStuff\App\Service\Product\ProductsScraperContext;
-use CoolStuff\App\Service\Product\Brand\NewProductsScraper;
-use CoolStuff\App\Service\Product\Brand\CraftProductsScraper;
-use CoolStuff\App\Service\Product\Brand\LocalProductsScraper;
-use CoolStuff\App\Service\Product\Brand\GlobalProductsScraper;
-use CoolStuff\App\Common\Repository\ProductRepositoryInterface;
+use CoolStuff\App\Service\Product\OnlineProductsSyncer;
+use CoolStuff\Shared\Repository\ProductRepositoryInterface;
+use CoolStuff\Shared\Service\Product\ProductsScraperContext;
+use CoolStuff\Shared\Service\Product\Brand\NewProductsScraper;
+use CoolStuff\Shared\Service\Product\Brand\CraftProductsScraper;
+use CoolStuff\Shared\Service\Product\Brand\LocalProductsScraper;
+use CoolStuff\Shared\Service\Product\Brand\GlobalProductsScraper;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
-    /*
-     * Web Scraper Context (Strategy Design Pattern entry)
-     */
-    $services->set(ProductsScraperContext::class)->public();
+    $services->set(ProductsScraperContext::class)
+        ->public();
 
     $services->set(ProductsScraper::class)
         ->arg('$productsScraperContext', service(ProductsScraperContext::class));
@@ -39,9 +36,6 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$scrapingPath', '%app.products.scraping_path%')
         ->abstract(true);
 
-    /*
-     * Web Scraper strategies
-     */
     $services->set(NewProductsScraper::class)
         ->parent(WebScraper::class)
         ->tag('app.web_scraper.products');
@@ -58,11 +52,9 @@ return static function (ContainerConfigurator $container): void {
         ->parent(WebScraper::class)
         ->tag('app.web_scraper.products');
 
-    /*
-     * Repository configurations
-     */
-    $services->set(ProductRepository::class)
-        ->arg('$manager', service(EntityManagerInterface::class));
-
-    $services->alias(ProductRepositoryInterface::class, ProductRepository::class);
+    $services->set(OnlineProductsSyncer::class)
+        ->args([
+            service(ProductsScraper::class),
+            service(ProductRepositoryInterface::class),
+        ]);
 };

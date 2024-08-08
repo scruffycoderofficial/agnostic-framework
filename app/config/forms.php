@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the D6 Assessment Project.
+ * This file is part of the CoolStuff Enterprise Project.
  *
  * (c) Luyanda Siko <sikoluyanda@gmail.com>
  *
@@ -20,6 +20,7 @@ use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
+use Symfony\Component\Form\Extension\Core\CoreExtension;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
@@ -52,11 +53,12 @@ return static function (ContainerConfigurator $container): void {
         ->call('addResource', ['xlf',  '%vendor.validator.dir%/Resources/translations/validators.en.xlf', 'en', 'validators']);
 
     $services->set(TwigRendererEngine::class)
-        ->args([['%app.forms.default_theme%'], service(Environment::class)]);
+        ->args([['%app.forms.default_theme%', 'bootstrap_5_layout.html.twig'], service(Environment::class)]);
 
     $services->set(FormRenderer::class)
         ->arg('$engine', service(TwigRendererEngine::class))
-        ->arg('$csrfTokenManager', service(CsrfTokenManager::class));
+        ->arg('$csrfTokenManager', service(CsrfTokenManager::class))
+        ->public();
 
     $services->set(CsrfExtension::class)
         ->arg('$tokenManager', service(CsrfTokenManager::class))
@@ -73,9 +75,12 @@ return static function (ContainerConfigurator $container): void {
     $services->set(ValidatorExtension::class)
         ->arg('$validator', service(Validation::class));
 
+    $services->set(CoreExtension::class);
+
     $services->set(FormFactoryBuilder::class)
         ->factory([Forms::class, 'createFormFactoryBuilder'])
         ->call('addExtension', [service(HttpFoundationExtension::class)])
         ->call('addExtension', [service(CsrfExtension::class)])
-        ->call('addExtension', [service(ValidatorExtension::class)]);
+        ->call('addExtension', [service(ValidatorExtension::class)])
+        ->call('addExtension', [service(CoreExtension::class)]);
 };

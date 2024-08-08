@@ -10,15 +10,13 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use Dompdf\Dompdf;
-use CoolStuff\Component\Service\DocumentWriter\PdfDocumentWriter;
+use Goutte\Client;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
-    $services->set(Dompdf::class)
-        ->call('setPaper', ['%app.pdf_size%', '%app.pdf_orientation%']);
-
-    $services->set(PdfDocumentWriter::class)
-        ->arg('$pdfWriter', service(Dompdf::class));
+    /*
+     * Web Scraping Client service
+     */
+    $services->set(Client::class);
 };

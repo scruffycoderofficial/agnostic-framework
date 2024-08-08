@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the D6 Assessment Project.
+ * This file is part of the CoolStuff Enterprise Project.
  *
  * (c) Luyanda Siko <sikoluyanda@gmail.com>
  *
@@ -12,14 +12,20 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
-use Symfony\Component\Form\FormRenderer;
-use Twig\RuntimeLoader\FactoryRuntimeLoader;
+use Symfony\Component\HttpFoundation\UrlHelper;
 use Symfony\Bridge\Twig\Extension\FormExtension;
-use D6\Invoice\Component\Twig\Extension\AppExtension;
-use D6\Invoice\Component\Twig\Extension\MoneyExtension;
+use CoolStuff\Component\Twig\Factory\ViewFactory;
+use Symfony\Bridge\Twig\Extension\RoutingExtension;
+use Symfony\Bridge\Twig\Extension\WebLinkExtension;
+use CoolStuff\Component\Twig\Extension\AppExtension;
+use Symfony\Bridge\Twig\Extension\HttpKernelRuntime;
+use CoolStuff\Component\Twig\Extension\MoneyExtension;
+use Symfony\Bridge\Twig\Extension\HttpKernelExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
+use Symfony\Bridge\Twig\Extension\HttpFoundationExtension;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
-/**
+/*
  * @see https://twig.symfony.com/doc/3.x/api.html
  */
 return static function (ContainerConfigurator $container): void {
@@ -33,16 +39,30 @@ return static function (ContainerConfigurator $container): void {
 
     $services->set(FormExtension::class);
 
-    $services->set(FactoryRuntimeLoader::class)
-        ->arg('$map', [FormRenderer::class]);
+    $services->set(RoutingExtension::class)
+        ->arg('$generator', service('url_generator'));
+
+    $services->set(WebLinkExtension::class)
+        ->arg('$requestStack', service('request_stack'));
+
+    $services->set(HttpKernelExtension::class);
+
+    $services->set(HttpFoundationExtension::class)
+        ->arg('$urlHelper', service(UrlHelper::class));
+
+    $services->set(HttpKernelRuntime::class)
+        ->arg('$handler', service(FragmentHandler::class));
 
     $services->set(FilesystemLoader::class)
         ->args(['resources/views', '%app.root_dir%'])
         ->call('addPath', ['%vendor.twig_bridge.dir%/Resources/views/Form'])
         ->public();
 
+    $services->set(ViewFactory::class);
+
     $services->set(Environment::class)
         ->args([
+            service('service_container'),
             service(FilesystemLoader::class),
             [
                 'cache' => '%app.root_dir%/var/cache/views',
@@ -50,10 +70,14 @@ return static function (ContainerConfigurator $container): void {
                 'twig.strict_variables' => true,
             ],
         ])
-        ->call('addRuntimeLoader', [service(FactoryRuntimeLoader::class)])
+        ->factory([ViewFactory::class, 'createEnvironment'])
         ->call('addExtension', [service(AppExtension::class)])
         ->call('addExtension', [service(MoneyExtension::class)])
         ->call('addExtension', [service(TranslationExtension::class)])
         ->call('addExtension', [service(FormExtension::class)])
+        ->call('addExtension', [service(RoutingExtension::class)])
+        ->call('addExtension', [service(WebLinkExtension::class)])
+        ->call('addExtension', [service(HttpKernelExtension::class)])
+        ->call('addExtension', [service(HttpFoundationExtension::class)])
         ->public();
 };

@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the D6 Assessment Project.
+ * This file is part of the CoolStuff Enterprise Project.
  *
  * (c) Luyanda Siko <sikoluyanda@gmail.com>
  *
@@ -21,10 +21,16 @@ use Doctrine\Migrations\Metadata\Storage\TableMetadataStorageConfiguration;
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
-    $services->set(TableMetadataStorageConfiguration::class)->call('setTableName', ['migrations'])->public();
+    $services->set(TableMetadataStorageConfiguration::class)
+        ->call('setTableName', ['migrations'])
+        ->public();
 
     $services->set(Configuration::class)
-        ->call('addMigrationsDirectory', ['CoolStuff\Database\Migrations', __DIR__.'/../db/migrations'])
+        ->call('addMigrationsDirectory', [
+            'CoolStuff\Database\Migrations',
+            __DIR__.'/../db/migrations',
+            __DIR__ . '/../src/Shared/Workflow/Domain/Migrations'
+        ])
         ->call('setAllOrNothing', [true])
         ->call('setCheckDatabasePlatform', [false])
         ->call('setMetadataStorageConfiguration', [service(TableMetadataStorageConfiguration::class)])

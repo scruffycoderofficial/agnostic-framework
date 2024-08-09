@@ -1,0 +1,37 @@
+{% extends 'journals/layout.html.twig' %}
+
+{% block main %}
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="page-header clearfix">
+                <h2>Create <span class="text-success">{{ product.getName() }} Journal Entry</span></h2>
+            </div>
+            <form
+                    action=""
+                    id="product-create-form"
+                    method="post"
+                    enctype="multipart/form-data"
+                    role="form"
+                    novalidate="">
+                <div class="load-animate animated fadeInUp">
+                    <div class="row col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                        <span class="form-inline">
+                            {{ form_widget(form) }}
+					    </span>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="row col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <button
+                                    class="btn btn-default submit-product-add"
+                                    id="submit"
+                                    type="reset">Submit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

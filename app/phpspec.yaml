@@ -1,0 +1,8 @@
+formatter.name: pretty
+
+suites:
+  coolstuff_default_suite:
+    namespace: CoolStuff
+    psr4_prefix: CoolStuff
+
+code_generation: true

@@ -1,0 +1,199 @@
+{% extends 'products/layout.html.twig' %}
+
+{% block main %}
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <h4>Create Product</h4>
+            <form action="/products/create" id="product-create-form" method="post" enctype="multipart/form-data" role="form" novalidate="">
+                <div class="load-animate animated fadeInUp">
+                    <div class="row col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                        <span class="form-inline">
+						    <div class="form-group">
+							    <label for="name" class="small">Name : &nbsp;</label>
+							    <div class="input-group">
+								    <input value="" type="string" class="form-control" name="name" id="name" placeholder="Product Name">
+							    </div>
+						    </div>
+						    <div class="form-group">
+							    <label for="description" class="small">Description : &nbsp;</label>
+							    <div class="input-group">
+                                    <textarea value="" type="string" class="form-control" name="description" id="description" placeholder="Product Description"></textarea>
+							    </div>
+						    </div>
+						    <div class="form-group">
+							    <label for="units" class="small">Units : &nbsp;</label>
+							    <div class="input-group">
+								    <input value="" type="number" class="form-control" name="units" id="units" placeholder="Product Units">
+							    </div>
+						    </div>
+							<div class="form-group">
+							    <label for="units" class="small">Unit Measure : &nbsp;</label>
+							    <div class="input-group">
+								    <select name="unit_measure">
+										<option value="">--- Select Unit Measure ---</option>
+										<option value="loose">Loose (12 x 700ml)</option>
+										<option value="case">Case (12 x 750ml)</option>
+										<option value="carry_pack">Carry Pack (6 x 300ml)</option>
+									</select>
+							    </div>
+						    </div>
+                            <div class="form-group">
+							    <label for="total" class="small">Total : &nbsp;</label>
+							    <div class="input-group">
+								    <div class="input-group-addon currency">R</div>
+								    <input value="" type="number" class="form-control" name="unit-price" id="unit_price" placeholder="Unit Price">
+							    </div>
+						    </div>
+					    </span>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="row col-xs-10 col-sm-4 col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <button class="btn btn-outline-primary submit-new-product" id="saveNewProduct" type="submit">Save</button>
+                            <button class="btn btn-danger cancel-product-add" id="clear" type="reset">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+
+	let btnCreateProduct = document.querySelector('.submit-new-product');
+
+	if (btnCreateProduct) {
+
+		btnCreateProduct.addEventListener('click', function (event) {
+
+			let selectedUnitMeasure = '';
+
+			let unitMeasureSelect = document.getElementById('unit_measure');
+
+			unitMeasureSelect.onchange = function() {
+				selectedUnitMeasure = this.options[this.selectedIndex].value;
+			}
+
+			let data = {
+				name: document.getElementById('name').value,
+				description: document.getElementById('description').value,
+				units: document.getElementById('units').value,
+				unit_measure: selectedUnitMeasure,
+				price: document.getElementById('unit_price').value
+			};
+
+			handleCreateProduct('/v1/api/products/create', data, event);
+		});
+	}
+
+	function handleCreateProduct(url, data, event) {
+		event.preventDefault();
+
+		let xhr = new XMLHttpRequest();
+
+		xhr.open('POST', url);
+		xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+		xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+		xhr.send(JSON.stringify(data));
+
+		addLoading('Handling product creation response.');
+
+	xhr.onload = function () {
+		if (xhr.status === 200) {
+			addAlert('success', result.message || 'New product has been created successfully!');
+		} else {
+			let result = xhr.responseText ? JSON.parse(xhr.responseText) : null;
+
+			if (result.errors) {
+			result.message = [];
+			for (let error in result.errors) {
+			result.message.push(result.errors[error]);
+		}
+	}
+
+		addAlert('error', result.message || 'Sorry there was a problem handling team invitation. Please try again.');
+	}
+		removeLoading();
+	};
+	}
+
+	let closeTimeout = null;
+
+	function closeAlert() {
+	var alert = document.getElementById('alert');
+
+	if (!alert) return;
+
+	alert.classList.remove('open');
+	setTimeout(function() {
+	document.body.removeChild(alert);
+	alert = null;
+
+	clearTimeout(closeTimeout);
+	closeTimeout = null;
+}, 260);
+}
+
+	function addAlert(type, messages, cb) {
+	closeAlert();
+
+	setTimeout(showAlert.bind(null, type, messages, cb), 260);
+}
+
+	function showAlert(type, messages, cb) {
+	var messageList = '';
+	var alert = '';
+	var time = type.toLowerCase() === 'error' ? 6000 : 4000;
+
+
+	if (typeof(messages) === 'string') {
+	messageList = '<li>' + messages + '</li>';
+} else {
+	for (var i = 0; i < messages.length; i++) {
+	messageList += '<li>' + messages[i] + '</li>';
+}
+}
+
+	alert = '<div id="alert" class="' + type + '"><ul>' + messageList + '</ul><button onclick="closeAlert()">&times;</button></div>';
+
+	document.body.insertAdjacentHTML('beforeend', alert);
+
+	setTimeout(function() {
+	document.getElementById('alert').classList.add('open');
+	closeTimeout = setTimeout((cb || closeAlert), time);
+}, 10);
+}
+
+	if (document.getElementById('alert')) {
+	setTimeout(closeAlert, 4000);
+}
+
+	function addLoading(msg) {
+	var loading = '<div id="alert-loading">' + (msg || 'Loading...') + ' <svg xmlns="http://www.w3.org/2000/svg" stroke="#1a1a1a" height="42" width="42" viewbox="0,0,42,42"><g transform="translate(2 2)"><g stroke-width="6" transform="translate(1 1)" fill-rule="evenodd" fill="none"><circle r="18" cy="18" cx="18" stroke-opacity="0.2" stroke="#1a1a1a"/><path d="M36 18c0-9.94-8.06-18-18-18"><animateTransform repeatCount="indefinite" dur="1s" to="360 18 18" from="0 18 18" type="rotate" attributeName="transform"/></path></g></g></svg></div>';
+
+	document.body.insertAdjacentHTML('beforeend', loading);
+
+	setTimeout(function() {
+	document.getElementById('alert-loading').classList.add('open');
+}, 10);
+
+}
+
+	function removeLoading() {
+	var loading = document.getElementById('alert-loading');
+
+	if (!loading) return;
+
+	loading.classList.remove('open');
+
+	setTimeout(function() {
+	document.body.removeChild(loading);
+}, 260);
+}
+
+</script>
+{% endblock %}
